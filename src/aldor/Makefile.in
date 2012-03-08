@@ -1,7 +1,7 @@
 # (Patch) Subject: Re: aldor/axiom interoperability
 # http://article.gmane.org/gmane.comp.mathematics.axiom.devel/19315/match=broadbery
 
-
+subdir=@subdir@/
 VPATH=@srcdir@
 MAKEFLAGS += -Wwarn-undefined-variables
 ALDOR=@ALDOR@
@@ -267,7 +267,7 @@ libaxiom.lst: initlist.lst
 CLIQUEOPTS=-mno-abbrev -mno-mactext -laldor -fx -c args=-lm
 cliques: cliques.as
 #	$(ALDOR) $(CLIQUEOPTS) $<
-	$(ALDOR) $(CLIQUEOPTS) -dTRACE $<
+	(ALDORROOT=$(dir $(ALDOR)); $(ALDOR) $(CLIQUEOPTS) -dTRACE $<)
 
 cliques.mk: libaxiom.lst cliques domaindepfiles aldordepfiles
 	./cliques libaxiom.lst > $@
@@ -330,3 +330,4 @@ install-runtimefiles: installdir-runtimefiles
 
 installdir-runtimefiles:
 	$(mkinstalldirs) '$(install_aldor_dir)/lib'
+
