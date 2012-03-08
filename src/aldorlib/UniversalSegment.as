@@ -1,4 +1,4 @@
---DEPS: init_UniversalSegment Segment_SegmentCategory OutputForm String_SetCategory
+--DEPS: Segment_SegmentCategory OutputForm String_SetCategory init_UniversalSegment
 --DEPS: Integer_SetCategory
 #include "axiom.as"
 
@@ -6,7 +6,7 @@ import from Boolean;
 import from System;
 import from String;
 
-extend UniversalSegment(S: Type): SegmentCategory(S) with {
+extend UniversalSegment(S: with): SegmentCategory(S) with {
     SEGMENT: S -> %;
         ++ \spad{l..} produces a half open segment,
         ++ that is, one with no upper bound.
@@ -95,7 +95,10 @@ extend UniversalSegment(S: Type): SegmentCategory(S) with {
          infix(" by "::OutputForm, seg, inc::OutputForm)}
     }
     if S has OrderedRing then {
-       generator(x: %): Generator S == never;
+       generator(x: %): Generator S == generate {
+           t := lo x;
+	   while t <= hi x repeat { yield t; t := t + (incr x)::S }
+       }
     }
  convert(s: %): InputForm == never;
   

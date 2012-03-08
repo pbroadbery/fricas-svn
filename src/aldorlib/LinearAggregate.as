@@ -1,5 +1,5 @@
 --DEPS: Collection IndexedAggregate init_NonNegativeInteger 
---DEPS: Integer_SetCategory init_UniversalSegment Segment_SegmentCategory
+--DEPS: Integer_OrderedRing init_UniversalSegment Segment_SegmentCategory
 #include "axiom.as"
 
 import from Boolean;

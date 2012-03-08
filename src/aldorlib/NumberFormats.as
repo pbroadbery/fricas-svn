@@ -37,8 +37,9 @@ NumberFormats: NFexports == NFimplementation where
     NFimplementation ==> add
         default pn: PI
 	default s: S
-	import from XLisp;
 
-        FormatArabic pn: S == unlisp(S)(STRINGIMAGE(lisp(PI)(pn))$XLisp)
-        ScanArabic   s: PI == unlisp(PI)(PARSE_-INTEGER(lisp(S)(s))$XLisp)
+--        FormatArabic pn: S == unlisp(S)(STRINGIMAGE(lisp(PI)(pn))$XLisp)
+--        ScanArabic   s: PI == unlisp(PI)(PARSE_-INTEGER(lisp(S)(s))$XLisp)
+        FormatArabic pn: S == never
+        ScanArabic   s: PI == never
 

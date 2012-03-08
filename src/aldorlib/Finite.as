@@ -1,4 +1,5 @@
---DEPS: NonNegativeInteger SetCategory ConvertibleTo init_InputForm init_PositiveInteger List_StreamAggregate
+--DEPS: NonNegativeInteger SetCategory ConvertibleTo init_InputForm
+--DEPS: init_PositiveInteger List_StreamAggregate Integer_OrderedRing
 
 #include "axiom.as"
 
@@ -23,11 +24,13 @@ Finite: Category == Join(SetCategory, ConvertibleTo InputForm) with {
   default {
       import from NonNegativeInteger;
       import from PositiveInteger;
-      import from Segment NonNegativeInteger;
+      import from UniversalSegment Integer;
       import from List %;
+      import from Integer;
+
       random(): % == index((1+random(size()$%))::PositiveInteger);
 
-      enumerate(): List % == [index(i::PositiveInteger) for i in 1..size()];
+      enumerate(): List % == [index(i::PositiveInteger) for i in 1..size()::Integer];
 
       convert(x: %): InputForm == never;
 }

@@ -1,4 +1,5 @@
 --DEPS: lang
 #include "axiom.as"
 
-Symbol: with == add;
+TheSymbol: Category == with;
+Symbol: TheSymbol with == add;

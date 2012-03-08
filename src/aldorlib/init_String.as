@@ -1,4 +1,5 @@
 --DEPS:  lang
 #include "axiom.as"
 
-String: with == add;
+TheString: Category == with;
+String: TheString with == add;

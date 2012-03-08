@@ -1,4 +1,4 @@
---DEPS:  IntegralDomain List System
+--DEPS:  IntegralDomain List
 #include "axiom.as"
 
 import from System;

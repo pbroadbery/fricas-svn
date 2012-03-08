@@ -1,13 +1,17 @@
---DEPS: init_Symbol init_String
+--DEPS: init_Symbol String
 
 #include "axiom.as"
 
 extend Symbol: with {
    coerce: String -> %;
    #: String -> %;
+   =: (%, %) -> Boolean;
 }
 == add {
-   -- Rep ==> Lisp Symbol
-   coerce(x: String): % == never;
-   #(x: String): % == never;
+   Rep ==> String;
+   import from String;
+   coerce(x: String): % == per x;
+   #(x: String): % == per x;
+   
+   (a: %) = (b: %): Boolean == rep a = rep b;
 }

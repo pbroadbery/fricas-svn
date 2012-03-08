@@ -1,4 +1,4 @@
---DEPS:  Integer System String
+--DEPS:  Integer System 
 #include "axiom"
 
 --import from System;
@@ -14,7 +14,6 @@ extend NonNegativeInteger: with {
     *: (%, %) -> %;
     odd?: % -> Boolean;
     coerce: % -> Integer;
---    coerce: Integer -> %;
 
     zero?: % -> Boolean;
     =: (%, %) -> Boolean;
@@ -38,6 +37,5 @@ extend NonNegativeInteger: with {
     (a: %) quo (b: %): Integer == rep(a) quo rep(b);
 
     random(a: %): % == never; 
---    coerce(n: Integer): % == { zero? n => error "oops"; per(n)}
 }
 

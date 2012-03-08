@@ -221,9 +221,12 @@ PseudoRemainderSequence(R: IntegralDomain, polR: UnivariatePolynomialCategory0 R
     local construct(coef2 : polR, resultant : R): Record(coef2 : polR, resultant : R) == [coef2, resultant]
 
     local construct(coef1: polR, coef2: polR, subResultant: polR): Record(coef1: polR, coef2: polR, subResultant: polR) == [coef1, coef2, subResultant]
+    import from OutputForm;
+--    print outputForm "Initialising...";
+    --X : polR := monomial(1$R,1)
 
-    X : polR := monomial(1$R,1)
-    
+    X ==> monomial(1$R, 1)
+
     (r : R) * (v : Vector(polR)): Vector polR == r::polR * v
               -- the instruction  map(r * #1, v) is slower !?
 

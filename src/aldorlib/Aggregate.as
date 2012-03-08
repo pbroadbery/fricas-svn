@@ -1,4 +1,4 @@
---DEPS:  NonNegativeInteger finiteAggregate XLisp
+--DEPS:  NonNegativeInteger finiteAggregate runtime/c/Local
 #include "axiom.as"
 
 import from Boolean;
@@ -28,10 +28,9 @@ Aggregate: Category == with {
  default {
   default a, b: %;
   default n: NonNegativeInteger;
-  import from XLisp;
   import from NonNegativeInteger;
 
-  eq?(a,b): Boolean == EQ(lisp(%)(a),lisp(%)(b))$XLisp;
+  eq?(a,b): Boolean == never;
   sample(): % == empty();
   if % has finiteAggregate then {
     empty? a: Boolean   == #a = 0;

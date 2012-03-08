@@ -1,4 +1,4 @@
---DEPS:  BasicType CoercibleTo init_OutputForm String init_SingleInteger
+--DEPS:  BasicType CoercibleTo init_OutputForm String SingleInteger
 
 #include "axiom"
 

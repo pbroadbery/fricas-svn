@@ -1,4 +1,4 @@
---DEPS: PrincipalIdealDomain0
+--DEPS: PrincipalIdealDomain0 List_StreamAggregate
 #include "axiom.as"
 
 import from Boolean;

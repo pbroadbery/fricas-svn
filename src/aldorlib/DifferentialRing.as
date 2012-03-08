@@ -1,4 +1,4 @@
---DEPS: Ring NonNegativeInteger Segment_SegmentCategory
+--DEPS: Ring NonNegativeInteger UniversalSegment Integer_OrderedRing
 #include "axiom.as"
 
 DifferentialRing: Category == Ring with {
@@ -20,8 +20,9 @@ DifferentialRing: Category == Ring with {
 
     D r: % == differentiate r;
     differentiate(r, n): % == {
-      import from Segment NonNegativeInteger;
-      for i in 1..n repeat r := differentiate r;
+      import from UniversalSegment Integer;
+      import from Integer;
+      for i in 1..(n::Integer) repeat r := differentiate r;
       r}
     D(r,n): % == differentiate(r,n);
 }

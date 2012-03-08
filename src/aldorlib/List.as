@@ -1,11 +1,11 @@
---DEPS:  init_List XLisp init_Generator NonNegativeInteger SetCategory
+--DEPS:  init_List init_Generator NonNegativeInteger SetCategory Tuple runtime/c/Local
 #include "axiom.as"
 
 import from Boolean;
 import from System;
 import from String;
 
-extend List(T: Type): BasicType with {
+extend List(T: Type): with {
   nil: () -> %;
   empty: () -> %;
   empty?: % -> Boolean;
@@ -51,10 +51,13 @@ extend List(T: Type): BasicType with {
 
   sort: ((T, T) -> Boolean, %) -> %;
 
+  =: (%, %) -> Boolean;
+
   export from 'first', 'rest'
 }
  == add {
-  Rep ==> XLisp;
+  Rep ==> ListLisp T;
+  import from ListLisp T;
   import from Rep;
   import from 'first', 'rest';
 
@@ -63,21 +66,25 @@ extend List(T: Type): BasicType with {
   empty?(x: %): Boolean == NULL(rep(x));
   null(x: %): Boolean == NULL(rep(x));
 
-  first(x: %): T == unlisp(T)(CAR(rep x));
+  first(x: %): T == CAR(rep x);
   rest(x: %): % == per(CDR(rep x));
   
   apply(x: %, zzz: 'first'): T == first(x);
   apply(x: %, zzz: 'rest'): % == rest(x);
 
-  set!(x: %, zzz: 'first', v: T): () == RPLACA(rep x, lisp(T)(v));
-  set!(x: %, zzz: 'rest',  r: %): () == RPLACD(rep x, rep (r));
+  set!(x: %, zzz: 'first', v: T): () == RPLACA(rep x, v);
+  set!(x: %, zzz: 'rest',  r: %): () == RPLACD(rep x, rep(r));
   
   second(x: %): T == first rest x;
 
   member?(x: T, l: %): Boolean == never;
-  (a: %) = (b: %): Boolean == EQ(rep a, rep b);
 
-  [t: Tuple T]: % == never;
+  (a: %) = (b: %): Boolean == {
+     empty? a => empty? b;
+     empty? b => false;
+     rest a = rest b;}
+
+  [t: Tuple T]: % == [e for e in t];
 
   [g: Generator T]: % == {
      l := nil();
@@ -92,21 +99,45 @@ extend List(T: Type): BasicType with {
 	   last := last.rest;
 	}
      }
-     last;
+     l
   }
 
-  cons(e: T, l: %): % == per CONS(lisp(T)(e), rep l);
+  cons(e: T, l: %): % == per CONS(e, rep l);
+
   generator(l: %): Generator T == generate {
       while not empty? l repeat {
           yield first l;
 	  l := rest l;
       }
   }
-  #(x: %): NonNegativeInteger == never;
+  #(x: %): NonNegativeInteger == {
+       l: NonNegativeInteger := 0;
+       while not empty? x repeat { l := l + 1; x := rest x};
+       l;
+  }
   concat(t: T, l2: %): % == never;
-  reverse!(x: %): % == never;
-  last(x: %): T == never;
-  copy(x: %): % == never;
+
+  reverse!(x: %): % == {
+     empty? x => empty();
+     prev := nil();
+     while not empty? x repeat {
+	   tmp := x.rest;
+     	   x.rest := prev;
+	   prev := x;
+	   x := tmp
+     }
+     prev
+  }
+
+  local lastCell(x: %): % == {
+     empty? x => error "empty list";
+     while not empty? rest x repeat x := rest x;
+     x
+  }
+
+  last(x: %): T == first lastCell x;
+
+  copy(x: %): % == [e for e in x];
   split!(x: %, n: Integer): % == never;
 
   append(t: %, l2: %): % == never;
@@ -126,11 +157,25 @@ extend List(T: Type): BasicType with {
       total
   }
   remove(f:T->Boolean, x:%): % == never;
-  reverse(x:%): % == never;
+  reverse(x:%): % == {
+     empty? x => empty();
+     l := empty();
+     while not empty? x repeat {
+        l := cons(first x, l);
+        x := rest x;
+     }
+     return l;
+  }
+
   _select(f:T->Boolean, x:%): % == never;
 
   concat(l1: %, l2: %): % == never;
-  concat!(l1: %, l2: %): % == never;
+  concat!(l1: %, l2: %): % == {
+     empty? l1 => l2;
+     theLastCell := lastCell l1;
+     theLastCell.rest := l2;
+     l1
+  }
 
   sort(f: (T, T) -> Boolean, l: %): % == never;
 

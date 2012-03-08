@@ -23,8 +23,9 @@ DifferentialExtension(R:Ring): Category == Ring with {
   default {
     default x: %;
     differentiate(x:%, derivation: R -> R, n:NonNegativeInteger):% =={
-      import from Segment NonNegativeInteger;
-      for i in 1..n repeat x := differentiate(x, derivation);
+      import from UniversalSegment Integer;
+      import from Integer;
+      for i in 1..(n::Integer) repeat x := differentiate(x, derivation);
       x}
     D(x:%, derivation: R -> R): % == differentiate(x, derivation);
     D(x:%, derivation: R -> R, n:NonNegativeInteger): % ==

@@ -1,4 +1,4 @@
---DEPS: BitAggregate Integer
+--DEPS: BitAggregate Integer String_OneDimensionalArrayAggregate
 #include "axiom.as"
 #pile
 

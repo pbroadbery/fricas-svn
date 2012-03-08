@@ -5,27 +5,40 @@ extend SingleInteger: ConvertibleTo Integer with {
        max: () -> %;
        coerce: % -> Integer;
        =: (%, %) -> Boolean;
+       ~=: (%, %) -> Boolean;
+
        <: (%, %) -> Boolean;
+       >: (%, %) -> Boolean;
+       >=: (%, %) -> Boolean;
+       <=: (%, %) -> Boolean;
+
        +: (%, %) -> %;
        -: (%, %) -> %;
        *: (%, %) -> %;
-       integer: Literal -> %;
        1: %;
+       0: %;
 } 
 == add {
+   import from Machine;
    import from Integer;
-   1: % == never;
-   max(): % == never;
-   coerce(x: %): Integer == never;
-   convert(x: %): Integer == never;
+   Rep ==> SInt;
 
-   coerce: PositiveInteger -> %;
+   1: % == per(1$Machine);
+   0: % == per(0$Machine);
+
+   max(): % == never;
+   coerce(x: %): Integer == (convert rep x)@BInt pretend Integer;
+   convert(x: %): Integer == coerce x;
+
+   local coerce(b: Bool): Boolean == b pretend Boolean;
    
-   (a: %) = (b: %): Boolean == never;
-   (a: %) < (b: %): Boolean == never;
-   (a: %) ~= (b: %): Boolean == never;
-   (a: %) + (b: %): % == never;
-   (a: %) - (b: %): % == never;
-   (a: %) * (b: %): % == never;
-   integer(l: Literal): % == never;
+   (a: %) = (b: %): Boolean == (rep a = rep b)::Boolean;
+   (a: %) < (b: %): Boolean == (rep a < rep b)::Boolean;
+   (a: %) <= (b: %): Boolean == (rep a <= rep b)::Boolean;
+   (a: %) > (b: %): Boolean == b < a;
+   (a: %) >= (b: %): Boolean == b <= a;
+   (a: %) ~= (b: %): Boolean == (rep a ~= rep b)::Boolean;
+   (a: %) + (b: %): % == per(rep a + rep b);
+   (a: %) - (b: %): % == per(rep a + rep b);
+   (a: %) * (b: %): % == per(rep a + rep b);
 }

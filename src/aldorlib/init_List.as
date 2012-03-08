@@ -1,4 +1,5 @@
 --DEPS:  BasicType Partial
 #include "axiom"
 
-List(T: Type): with == add;
+TheList: Category == with;
+List(T: Type): TheList with == add;

@@ -1,7 +1,9 @@
---DEPS:  lang init_Boolean init_NonNegativeInteger init_PositiveInteger Basic Boolean 
+--DEPS: init_NonNegativeInteger init_PositiveInteger  
+--DEPS: Boolean init_String init_SingleInteger
 #include "axiom"
 
-Integer: with {
+TheInteger: Category == with;
+Integer: TheInteger with {
     integer: Literal -> %;
     zero?: % -> Boolean;
     one?: % -> Boolean;
@@ -15,6 +17,7 @@ Integer: with {
     even?: % -> Boolean;
     coerce: % -> NonNegativeInteger;
     coerce: % -> PositiveInteger;
+    coerce: % -> SingleInteger;
     >=: (%, %) -> Boolean;
     <=: (%, %) -> Boolean;
     >: (%, %) -> Boolean;
@@ -39,12 +42,12 @@ Integer: with {
     integer: Literal -> %;
 
 } == add {
-    Rep ==> BasicInteger;
-    import from Rep;
-    import from BasicBoolean;
-    import from BasicArray;
+    Rep ==> BInt;
+    import from Machine;
 
-    one?(x: %): Boolean == (rep(x) = one()$Rep)::Boolean;
+    local coerce(b: Bool): Boolean == b pretend Boolean;
+
+    one?(x: %): Boolean == (rep(x) = 1)::Boolean;
     zero?(x: %): Boolean == (zero? rep x)::Boolean;
     positive?(x: %): Boolean == positive?(rep x)::Boolean;
     negative?(x: %): Boolean == negative?(rep x)::Boolean;
@@ -52,19 +55,21 @@ Integer: with {
     odd?(x: %): Boolean == odd?(rep x)::Boolean;
 
     shift(x: %, n: %): % == never;
-    -(n: %): % == per negate rep n;
+    -(n: %): % == per(-(rep n));
     (a: %) - (b: %): % == per(rep a - rep b);
     (a: %) + (b: %): % == per(rep a + rep b);
     (a: %) * (b: %): % == per(rep a * rep b);
 
-    1: % == per one();
-    0: % == per zero();
+    1: % == per 1;
+    0: % == per 0;
 
     coerce(x: %): NonNegativeInteger == { x < 0 => never; x pretend NonNegativeInteger};
     coerce(x: %): PositiveInteger == { x <= 0 => never; x pretend PositiveInteger};
-    (a: %) >  (b: %): Boolean == (rep a >  rep b)::Boolean;
+    coerce(x: %): SingleInteger == convert(rep x)@SInt pretend SingleInteger;
+
+    (a: %) >  (b: %): Boolean == b < a;
     (a: %) <  (b: %): Boolean == (rep a <  rep b)::Boolean;
-    (a: %) >= (b: %): Boolean == (rep a >= rep b)::Boolean;
+    (a: %) >= (b: %): Boolean == b <= a;
     (a: %) <= (b: %): Boolean == (rep a <= rep b)::Boolean;
     (a: %) =  (b: %): Boolean == (rep a =  rep b)::Boolean;
     (a: %) ~= (b: %): Boolean == (rep a ~= rep b)::Boolean;
@@ -76,15 +81,14 @@ Integer: with {
     divide(a: %, b: %): (%, %) == { (q, r) := divide(rep a, rep b); (per q, per r)}
     positiveRemainder(a: %, b: %): % == a rem b;
     import from Literal;
-    integer(l: Literal): % == per convert(l::BasicArray);
+    integer(l: Literal): % == per convert(l pretend Arr);
     sample: % == 0;
     addmod(x: %, y: %, p: %): % == (x + y) mod p;
     submod(x: %, y: %, p: %): % == (x - y) mod p;
     mulmod(x: %, y: %, p: %): % == (x * y) mod p;
-    powmod(x: %, y: %, p: %): % == per powmod(rep x, rep y, rep p);
+    powmod(x: %, y: %, p: %): % == per mod_^(rep x, rep y, rep p);
 
     random(x: %): % == never;
-
 }
 
 

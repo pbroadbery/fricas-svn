@@ -11,9 +11,17 @@ extend List(T: Type): StreamAggregate T with {
 	first(l: %, n: NonNegativeInteger): % == never;
 	constructList(t: T): % == never;
 	new(n: NonNegativeInteger, t: T): % == never;
+
 	map(f: (T, T)-> T, l1: %, l2: %): % == never;
+
 	delete(l: %, n: Integer): % == never;
 	delete(l: %, r: UniversalSegment(Integer)): % == never;
+
 	insert(l1: %, l2: %, n: Integer): % == never;
+
 	construct(l: List T): % == l;
+
+	setfirst!(x: %, t: T): T == never;
+	setrest!(x: %, y: %): % == never;
+	concat!(x: %, t: T): % == never;
 }

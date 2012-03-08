@@ -7,11 +7,11 @@ VPATH=@srcdir@
 MAKEFLAGS += -Wwarn-undefined-variables
 ALDOR=@ALDOR@
 
-scripts := build-dep show gloop
+scripts := build-dep show 
 testscripts := test-build-dep
 
 lang := lang init_Generator Void Tuple Basic 
-environment := System init_XLisp XLisp
+environment := System init_XLisp 
 
 attributes := unitsKnown noZeroDivisors CommutativeStar			\
 	      canonicalUnitNormal finiteAggregate shallowlyMutable	\
@@ -28,8 +28,8 @@ basics := CoercibleTo FullyRetractableTo RetractableTo ConvertibleTo	\
           SetCategory init_String BasicType OrderedFinite		\
           init_Boolean String init_InputForm RepeatedDoubling		\
           RepeatedSquaring init_Symbol Symbol Symbol_SetCategory	\
-          init_Character Character_Base Logic Character			\
-          String_SetCategory
+          init_Character Character_Base Logic Character init_Pointer	\
+          String_SetCategory String_OneDimensionalArrayAggregate
 
 outputs := init_OutputForm OutputForm NumberFormats	\
 	   OutputFormLisp
@@ -46,9 +46,10 @@ domains := PrincipalIdealDomain0 PrincipalIdealDomain GcdDomain0	\
            GcdDomain IntegralDomain EuclideanDomain0 EuclideanDomain	\
            IdealElt
 
-floats := init_DoubleFloat init_Float DoubleFloat_SetCategory
+floats := init_DoubleFloat init_Float DoubleFloat_SetCategory	\
+	  DoubleFloat
 
-_sexprs := init_SExpression SExpressionCategory SExpressionOf SExpression
+_sexprs := init_SExpression SExpressionCategory 
 sexprs  := $(patsubst %, sexpr/%, $(_sexprs))
 
 fractions := Localize init_Fraction DivisionRing LocalAlgebra	\
@@ -104,37 +105,50 @@ linalg := init_Vector init_Matrix Matrix_TwoDimensionalArrayCategory	\
 axioms := axioms/Stream axioms/RandomGenerator axioms/AxiomEnv	\
 	  axioms/Axiom axioms/AxiomConstructorPackage
 
-tests := tests/Test0
+tests := tests/TestVector tests/TestInt tests/TestPrimitiveArray	\
+	 tests/TestTuple tests/TestList tests/TestPolynomialRing	\
+	 tests/TestList_StreamAggregate tests/TestSUP0			\
+	 tests/TestOutputForm tests/TestString				\
+	 tests/TestIndexedDirectProduct tests/TestUniversalSegment	\
+	 tests/TestPseudoRemainderSequence tests/Test0
 
-library := $(lang) $(sexprs) $(outputs) $(randoms) $(axioms)		\
-	   $(arrays) $(tests) $(datatypes) $(linalg) $(trig)		\
-	   $(factoreds) $(poly) $(integers)$(floats) $(fractions)	\
-	   $(maths) $(attributes) $(environment) $(basics)		\
-	   $(segments) $(orders) $(domains) $(equations)
+runtime := runtime/c/Local runtime/c/rtexns runtime/c/LString	\
+	   runtime/c/SExpression
 
-opts_UPC := -WD+tipBup -WD+tfs -WD+ablog -WD+tipTdn -Mpreview 
+library := x/P Pol $(lang) $(runtime) $(sexprs) $(outputs) $(randoms)	\
+	   $(axioms) $(arrays) $(tests) $(datatypes) $(linalg)		\
+	   $(trig) $(factoreds) $(poly) $(integers)$(floats)		\
+	   $(fractions) $(maths) $(attributes) $(environment)		\
+	   $(basics) $(segments) $(orders) $(domains) $(equations)
+
+opts_VectorCategory := -WD+tipBup -WD+tf -Mpreview
+#opts_runtime/c/XLisp2 := -WD+tipBup -WD+tfs 
 
 reqfiles := $(patsubst %,%.req,$(library))
 depfiles := $(patsubst %,%.dep,$(library))
 aofiles := $(patsubst %,%.ao,$(library))
 fmfiles := $(patsubst %,%.fm,$(library))
 
-all: run-all-tests compile_aofiles
+all: run-all-tests gloop-tests compile_aofiles
 
 compile_aofiles: $(aofiles) 
 compile_fmfiles: $(fmfiles) 
+gloop-tests: $(patsubst %,gloop-%, $(tests))
+
+-include $(patsubst %,%.mk,$(library))
 
 $(depfiles): %.dep: $(srcdir)/%.as
 
-$(patsubst %,%.mk,$(library)): %.mk: $(srcdir)/%.as
+$(patsubst %,%.mk, $(library)): %.mk: $(srcdir)/%.as
 	@echo MK $@
 	@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 	@echo > $@.tmp
 	@for i in $$(cat $(srcdir)/$*.as | sed -n -e '/^--DEPS:/s/^--DEPS://p'); \
 	 do \
-	 	echo "$*.dep: $$i.dep" >> $@.tmp;     \
 	 	echo "$*.ao: $$i.ao" >> $@.tmp;       \
+	 	echo "$*.dep: $$i.dep" >> $@.tmp;     \
 	 	echo "gloop-$*: $$i.ao" >> $@.tmp;    \
+	 	echo "gloop-$*: $$i.dep" >> $@.tmp;    \
 	 done;  \
 	 mv $@.tmp $@
 
@@ -144,29 +158,47 @@ $(reqfiles): %.req: $(srcdir)/%.as
 	@for i in $$(cat $(srcdir)/$*.as | sed -n -e '/^--DEPS:/s/^--DEPS://p'); \
 	 do echo "$$i" >> $@; done
 
--include $(patsubst %,%.mk,$(library))
-
 C_ :=
 C_L := -WD+lib -WD+symeFill
 C_T := -Mpreview -WD+tipBup
+C_T2 := -Mpreview -WD+tipBup -WD+tfs
 
+O_ := 
+O_0 := -O
+O_1 := -O
 define aldor
 $(ALDOR) -fap=$*.ap -I$(srcdir) -Y$(dir $*) \
-	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(opts_$*) -fasy -fao=$@ -O $(srcdir)/$*.as
+	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(O_$(O)) $(opts_$*) -fasy -fao=$*.ao $(srcdir)/$*.as
 endef
 
+I_ :=
+I_D := -WD+fint
+define aldor_interp
+(cd $(dir $*); $(ALDOR) -I$(abs_srcdir) -Y. \
+	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(I_$(I)) $(O_$(O)) $(opts_$*) -ginterp $(abs_srcdir)/$*.as)
+endef
+
+define aldor_interp_cmd
+(cd $(dir $*); gdb --args $(ALDOR) -I$(abs_srcdir) -Y. \
+	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(I_$(I)) $(O_$(O)) $(opts_$*) -ginterp $(abs_srcdir)/$*.as)
+endef
+
+define create_library
+	rm -f $(dir $@)libaxiom_$(notdir $*).al; \
+	for i in $$(cat $*.dep); \
+	do \
+		ar r $(dir $*)libaxiom_$(notdir $*).al $$i.ao; \
+	done;
+endef
+$(aofiles): all-build-tests
 $(aofiles): %.ao: $(srcdir)/%.as %.dep
 	@$(call build-ignoring, %.dep, $?, \
-		echo AO $@; \
-		rm -f $(dir $@)/libaxiom_$(notdir $*).al; \
-		for i in $$(cat $*.dep); \
-		do \
-			ar r $(dir $*)libaxiom_$(notdir $*).al $$i.ao; \
-		done;\
+		echo AO $@;		\
+		$(create_library)	\
 		$(aldor))
 
 $(patsubst %, %.cmd, $(library)): %.cmd:
-	@echo $(aldor)
+	gdb --args $(aldor)
 
 define build-ignoring 
 	$(if $(filter-out $(1), $(2)), $(3), echo "Ignoring changes to $(2)")
@@ -201,12 +233,19 @@ $(patsubst %, show-%, $(library)): show
 $(patsubst %, show-%, $(library)): show-%: %.ao
 	aldor="$(ALDOR)" srcdir=$(srcdir) ./show $*
 
-$(patsubst %, gloop-%, $(library)): gloop
+$(patsubst %, gloop-%, $(library)): gloop-%: %.dep
+
 $(patsubst %, gloop-%, $(library)): gloop-%: 
-	aldor="$(ALDOR)" srcdir=$(srcdir) ./gloop $*
+	$(create_library)
+	$(aldor_interp)
+
+$(patsubst %, gloop-%.cmd, $(library)): gloop-%.cmd: 
+	$(aldor_interp_cmd)
 
 blacklist := tests/Test0
 axiom-library: $(foreach elt,$(filter-out $(blacklist), $(library)), $(elt).lsp)
+
+gloop-tests: $(patsubst %,gloop-%,$(tests))
 
 load.input.req: Makefile
 	for i in $(library); do echo $$i; done > $@

@@ -37,11 +37,14 @@ extend XLisp: with {
    STRINGIMAGE: % -> %;
    PARSE_-INTEGER: % -> %;
    LIST2VEC: % -> %;
+   
    0: %;
    lisp: (T: with) -> T -> %;
    unlisp: (T: with) -> % -> T;
 
    CHAR_-AT: (%, %) -> %;
+
+   STRING: Literal -> String;
 } == add {
   local LL: with == add;
 
@@ -110,6 +113,9 @@ extend XLisp: with {
 
   NUMBERP(x: %): Boolean == numberp(rep x);
   READ_-FROM_-STRING(x: %): % == per read_-from_-string(rep x);
+
+  STRING(l: Literal): String == l pretend String;
+  
 
   STRINGIMAGE(a: %): % == never;
   PARSE_-INTEGER(a: %): % == never;

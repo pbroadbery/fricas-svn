@@ -5,6 +5,10 @@
 #pile
 
 import from Boolean
+
+XYZZY: with == add;
+
+
 -- SKIPPED: Pattern, Factored
 -- USES GcdDomain0 in place of GcdDomain
 PolynomialCategory(R:Ring, E:OrderedAbelianMonoidSup, VarSet:OrderedSet):
@@ -86,7 +90,7 @@ PolynomialCategory(R:Ring, E:OrderedAbelianMonoidSup, VarSet:OrderedSet):
     import from Partial %
     import from Partial R
 
-    if R has CommutativeRing then
+    if R has CommutativeRing and R has GcdDomain0 and % has IntegralDomain then
         resultant(p1,p2,mvar): % ==
 	  u1 := univariate(p1, mvar)
 	  u2 := univariate(p2, mvar)

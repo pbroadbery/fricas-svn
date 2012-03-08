@@ -102,7 +102,7 @@ extend SparseUnivariatePolynomial(R: Ring): UnivariatePolynomialCategory0(R) wit
    local null(x: %): Boolean == null listOfTerms x
    local empty?(x: %): Boolean == null listOfTerms x
    local apply(x: %, zz: 'first'): Term == (listOfTerms x).first
-   local apply(x: %, zz: 'rest'): % == per (listOfTerms x).rest
+   local apply(x: %, zz: 'rest'): % == per((listOfTerms x).rest)
 
    import from 'first', 'rest'
    import from Term

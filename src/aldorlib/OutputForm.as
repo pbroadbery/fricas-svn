@@ -1,5 +1,5 @@
 --DEPS: init_OutputForm init_List String Integer Symbol init_DoubleFloat init_NonNegativeInteger
---DEPS: NumberFormats Character_Base OutputFormLisp SetCategory
+--DEPS: NumberFormats Character_Base OutputFormLisp SetCategory runtime/c/SExpression
 #include "axiom"
 
 #pile
@@ -262,12 +262,9 @@ extend OutputForm: SetCategory with
         --   better super script, overmark, undermark
         --   bug in product, paren blankSeparate []
         --   uniformize integrals, products, etc as plexes.
-	Rep ==> XLisp;
-	import from XLisp;
-        cons(a, b) ==> per(CONS(rep a, b pretend XLisp)$XLisp)
-        car  ==> CAR$XLisp
-        cdr  ==> CDR$XLisp
-
+	Rep ==> SExpression;
+        import from Rep;
+	
         default a, b, c, x: %
         default l: List %
         default s: String
@@ -275,27 +272,33 @@ extend OutputForm: SetCategory with
         default n, m, w, h: Integer
         default nn:NonNegativeInteger
         default ll: List List %
+
+	local cons(a: %, b: %): % == per cons(rep a, rep b)
+
+	local EQCAR(s1: SExpression, s2: SExpression): Boolean == pair? s1 and eql(car s1, s2)
 	
 	import from Character
         --sform:    String  -> %
         --eform:    Symbol  -> %
         --iform:    Integer -> %
 
-        print x: ()              == mathprint(x)$OutputFormLisp
-        message s: %            == (empty? s => empty(); s pretend %)
+--        print x: ()              == mathprint(x)$OutputFormLisp
+        print x: ()              == {}
+        message s: %            == (empty? s => empty(); outputForm s)
         messagePrint s: ()       == print message s
-        (a:%) = (b:%):Boolean  == EQUAL(rep a, rep b)$XLisp
+        (a:%) = (b:%):Boolean  == rep(a) = rep(b);
         (a:%) = (b:%):%        == convert [eform #"=",     a, b]
+
         coerce(a):OutputForm  == a pretend OutputForm
 
-	convert(l: List %): % == never;
+	convert(l: List %): % == per convert(l pretend List SExpression)
 
-        outputForm n: %         == n pretend %
-        outputForm e: %         == e pretend %
-        outputForm(f:DoubleFloat): % == f pretend %
-        local sform s: %               == s pretend %
-        local eform e: %               == e pretend %
-        local iform n: %                == n pretend %
+        outputForm n: %  == per convert n;
+        outputForm e: %  == per convert e;
+        outputForm(f:DoubleFloat): % == per convert f;
+        local sform s: % == per convert s;
+        local eform e: % == per convert e;
+        local iform n: % == per convert n;
 
         outputForm s: % ==
           sform concat(quote()$Character, concat(s, quote()$Character))
@@ -326,22 +329,22 @@ extend OutputForm: SetCategory with
           n = 0 or m = 0 => empty()
           vconcat(hspace n, rspace(n, m - 1))
 
-        matrix ll: % ==
-            lv: List % := [per(LIST2VEC(l pretend XLisp)) for l in ll]
-            per CONS(rep eform #"MATRIX", LIST2VEC(lv pretend XLisp))
+        matrix ll: % == never
+--            lv: List % := [per(LIST2VEC(l)) for l in ll]
+--            per CONS(rep eform #"MATRIX", LIST2VEC(lv))
 
-        pile l: %              == cons(eform #"SC", l)
-        commaSeparate l: %     == cons(eform #"AGGLST",  l)
-        semicolonSeparate l: % == cons(eform #"AGGSET",  l)
+        pile l: %              == cons(eform #"SC", convert l)
+        commaSeparate l: %     == cons(eform #"AGGLST", convert l)
+        semicolonSeparate l: % == cons(eform #"AGGSET", convert l)
 
         blankSeparate l: %     ==
            c:=eform #"CONCATB"
-           l1: List % := []
+           l1: SExpression := nil
            for u in reverse l repeat
-               if EQCAR(rep u,rep c)$XLisp
-                  then l1:=concat(cdr(rep u) pretend List %, l1) -- [:cdr u,:l1] 
-                  else l1:=concat(u, l1)
-           cons(c, l1)
+               if EQCAR(rep u,rep c)
+                  then l1:=concat(cdr(rep u), l1) -- [:cdr u,:l1] 
+                  else l1:=cons(rep u, l1)
+           per cons(rep c, l1)
 
         brace a: %        == convert [eform #"BRACE", a]
         brace l: %        == brace commaSeparate l
@@ -358,15 +361,16 @@ extend OutputForm: SetCategory with
         scripts(a, l): % ==
             null l => a
             null rest l => sub(a, first l)
-            cons(eform #"SUPERSUB", cons(a, l))
+            cons(eform #"SUPERSUB", cons(a, convert l))
+	    
         supersub(a, l): % ==
             if odd?(#l) then l := append(l, [empty()])
-            cons(eform #"ALTSUPERSUB", cons(a, l))
+            cons(eform #"ALTSUPERSUB", cons(a, convert l))
 
         hconcat(a, b): %  == convert [eform #"CONCAT", a, b]
-        hconcat l: %     == cons(eform #"CONCAT", l)
+        hconcat l: %     == cons(eform #"CONCAT", convert l)
         vconcat(a, b): %  == convert [eform #"VCONCAT", a, b]
-        vconcat l: %     == cons(eform #"VCONCAT", l)
+        vconcat l: %     == cons(eform #"VCONCAT", convert l)
 
         a ~= b: %      == convert [eform #"~=",    a, b]
         a < b: %       == convert [eform #"<",     a, b]
@@ -399,16 +403,16 @@ extend OutputForm: SetCategory with
 --                return false
 --            if GET(elt,QUOTE(INFIXOP$XLisp)$XLisp)$XLisp then true else false
 
-        elt(a, l): % == cons(a, l)
+        elt(a, l): % == cons(a, convert l)
 
         prefix(a,l): % ==
-            not infix? a => cons(a, l)
+            not infix? a => cons(a, convert l)
             hconcat(a, paren commaSeparate l)
 	    
         infix(a, l): % ==
             null l => empty()
             null rest l => first l
-            infix? a => cons(a, l)
+            infix? a => cons(a, convert l)
             hconcat [first l, a, infix(a, rest l)]
         infix(a,b,c): %  ==
             infix? a => convert [a, b, c]

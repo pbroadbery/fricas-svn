@@ -1,4 +1,4 @@
---DEPS: init_DoubleFloat SetCategory OutputForm
+--DEPS: DoubleFloat SetCategory OutputForm
 #include "axiom.as"
 
 #pile

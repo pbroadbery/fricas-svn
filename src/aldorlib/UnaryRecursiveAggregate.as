@@ -1,4 +1,4 @@
---DEPS:  RecursiveAggregate System Segment_SegmentCategory UniversalSegment
+--DEPS:  RecursiveAggregate System Segment_SegmentCategory UniversalSegment Integer_OrderedRing
 #include "axiom.as"
 
 import from Boolean;

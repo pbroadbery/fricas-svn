@@ -2,5 +2,6 @@
 #include "axiom.as"
 
 #pile
+TheArray: Category == with;
 
-PrimitiveArray(S:Type): with == add
+PrimitiveArray(S:Type): TheArray with == add

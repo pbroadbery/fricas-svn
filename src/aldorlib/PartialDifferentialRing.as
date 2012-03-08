@@ -1,4 +1,4 @@
---DEPS: Ring init_Symbol List NonNegativeInteger Segment_SegmentCategory
+--DEPS: Ring init_Symbol List NonNegativeInteger Integer_OrderedRing UniversalSegment
 #include "axiom.as"
 
 import from Boolean;
@@ -30,13 +30,15 @@ PartialDifferentialRing(S:SetCategory): Category == Ring with {
         ++ multiple partial derivatives, i.e.
         ++ \spad{D(...D(x, s1, n1)..., sn, nn)}.
   default {
-    import from Segment NonNegativeInteger;
+    import from UniversalSegment Integer;
+    import from Integer;
+
     differentiate(r:%, l:List S): % == {
       for s in l repeat r := differentiate(r, s);
       r}
 
     differentiate(r:%, s:S, n:NonNegativeInteger): % == {
-      for i in 1..n repeat r := differentiate(r, s);
+      for i in 1..(n::Integer) repeat r := differentiate(r, s);
       r}
 
     differentiate(r:%, ls:List S, ln:List NonNegativeInteger): % == {

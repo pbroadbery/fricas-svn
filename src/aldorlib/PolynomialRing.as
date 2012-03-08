@@ -141,23 +141,23 @@ PolynomialRing(R : Join(SemiRng, AbelianMonoid), E : OrderedAbelianMonoid
                 res     := empty()
                 endcell := empty()
                 --spare   := empty()
-                while not empty? p1 and not empty? p2 repeat
-                        tx := first p1
-                        ty := first p2
+                while not empty? pp1 and not empty? pp2 repeat
+                        tx := first pp1
+                        ty := first pp2
                         exy := exp + ty.k
                         newcell := empty()
                         if tx.k = exy then
                                 newcoef := tx.c + coef * ty.c
                                 if not zero? newcoef then
                                         tx.c    := newcoef
-                                        newcell := rep p1
+                                        newcell := pp1
                                 --else
-                                --      spare   := cons(p1, spare)
-                                p1 := rest p1
-                                p2 := rest p2
+                                --      spare   := cons(pp1, spare)
+                                pp1 := rest pp1
+                                pp2 := rest pp2
                         else if exy < tx.k then
-                                newcell := rep p1
-                                p1      := rest p1
+                                newcell := pp1
+                                pp1      := rest pp1
                         else
                                 newcoef := coef * ty.c
                                 if not entireRing? and zero? newcoef then
@@ -174,7 +174,7 @@ PolynomialRing(R : Join(SemiRng, AbelianMonoid), E : OrderedAbelianMonoid
                                 else
                                         ttt := [exy, newcoef]
                                         newcell := cons(ttt, empty())
-                                p2 := rest p2
+                                pp2 := rest pp2
                         if not empty? newcell then
                                 if empty? res then
                                         res := newcell
@@ -183,8 +183,9 @@ PolynomialRing(R : Join(SemiRng, AbelianMonoid), E : OrderedAbelianMonoid
                                         qsetrest!(endcell, newcell)
                                         endcell := newcell
 
-       addm!(pp1:Rep, coef:R, exp: E, pp2:Rep): Rep ==
+       addm!(pp1: Rep, coef:R, exp: E, pp2:Rep): Rep ==
            local res, newcell, endcell: Rep
+	   res := newcell := endcell := empty();
            --local spare: List Rep
            ADDM__BODY
            if not empty? pp1 then  -- then end is const * pp1
@@ -194,9 +195,9 @@ PolynomialRing(R : Join(SemiRng, AbelianMonoid), E : OrderedAbelianMonoid
            empty? res => newcell
            qsetrest!(endcell, newcell)
            res
-
+      
        pomopo! (p1, r, e, p2): % ==  per addm!(rep p1, r, e, rep p2)
-
+       
        p1 * p2: % ==
                 xx := rep p1
                 empty? xx => p1
