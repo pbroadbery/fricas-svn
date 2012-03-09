@@ -1,9 +1,8 @@
 --DEPS: init_NonNegativeInteger init_PositiveInteger  
---DEPS: Boolean init_String init_SingleInteger
+--DEPS: Boolean init_String init_SingleInteger init_Integer
 #include "axiom"
 
-TheInteger: Category == with;
-Integer: TheInteger with {
+extend Integer: TheInteger with {
     integer: Literal -> %;
     zero?: % -> Boolean;
     one?: % -> Boolean;
