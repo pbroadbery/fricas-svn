@@ -282,8 +282,7 @@ extend OutputForm: SetCategory with
         --eform:    Symbol  -> %
         --iform:    Integer -> %
 
---        print x: ()              == mathprint(x)$OutputFormLisp
-        print x: ()              == {}
+        print x: ()              == mathprint(rep x)$OutputFormLisp;
         message s: %            == (empty? s => empty(); outputForm s)
         messagePrint s: ()       == print message s
         (a:%) = (b:%):Boolean  == rep(a) = rep(b);

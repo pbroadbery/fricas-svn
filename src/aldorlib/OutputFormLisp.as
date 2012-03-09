@@ -1,20 +1,25 @@
 --DEPS: init_OutputForm init_List String Integer Symbol init_DoubleFloat init_NonNegativeInteger
---DEPS: NumberFormats Character_Base 
+--DEPS: NumberFormats Character_Base runtime/c/SExpression
 #include "axiom"
 
 #pile
-
+import from String;
+import from IO;
 OutputFormLisp: with 
      outformWidth: OutputForm -> Integer
      height: OutputForm -> Integer
      subspan: OutputForm -> Integer
      superspan: OutputForm -> Integer
-     mathprint: OutputForm -> ()
+     mathprint: SExpression -> ()
      fillerSpaces: (Integer, String) -> String;
   == add
      outformWidth(a: OutputForm): Integer == never;
      height(a: OutputForm): Integer == never;
      subspan(a: OutputForm): Integer == never;
      superspan(a: OutputForm): Integer == never;
-     mathprint(a: OutputForm): () == never;
+     mathprint(a: SExpression): () == 
+          import from Character
+          print(unparse(a) pretend LString);
+	  print(concat("", newline()) pretend LString)
+
      fillerSpaces(n: Integer, s: String): String == never;
