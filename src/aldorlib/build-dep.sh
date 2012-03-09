@@ -20,7 +20,7 @@ missing() {
 names=
 for i in $(cat $reqfile)
 do
-    if ! $(missing $i $names);
+    if ! $(missing $i "$names");
     then
 	continue
     fi
@@ -41,6 +41,7 @@ done
 
 rm -f $target
 touch $target
+
 for i in $names;
 do
     echo $i >> $target
