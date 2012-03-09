@@ -1,4 +1,4 @@
---DEPS: runtime/c/Local sexpr/SExpressionCategory Symbol init_OutputForm DoubleFloat
+--DEPS: runtime/c/Local sexpr/SExpressionCategory Symbol init_OutputForm DoubleFloat Integer
 --DEPS: String List
 
 #include "axiom.as"
@@ -63,6 +63,8 @@ SExpression: with
         nil: %
         eql: (%, %) -> Boolean
         concat: (a: %, b: %) -> %;
+
+ 	unparse: % -> String;
 == add 
    Cons ==> Record(car: %, cdr: %);
    Rep ==> Union(string: String, symbol: Symbol, integer: Integer, 
@@ -82,17 +84,17 @@ SExpression: with
    
    atom? a: Boolean == not pair? a
 
-   pair? a: Boolean == rep a case pair;
+   pair? a: Boolean == not null? a and rep a case pair;
    
    list? a: Boolean == null? a or pair? a;
 
-   string? a: Boolean == rep(a) case string;
+   string? a: Boolean == not null? a and rep(a) case string;
    
-   symbol? a: Boolean == rep(a) case symbol;
+   symbol? a: Boolean == not null? a and rep(a) case symbol;
 
-   integer? a: Boolean == rep(a) case integer
+   integer? a: Boolean == not null? a and rep(a) case integer
 
-   float? a: Boolean == rep(a) case float;
+   float? a: Boolean == not null? a and rep(a) case float;
 
    destruct a: List % == never;
 
@@ -140,3 +142,24 @@ SExpression: with
       integer? a => integer? b and integer a = integer b
       float? a => float? b and float a = float b
       never
+
+   -- Grossly inefficient (needs a buffer type)
+   unparse(a: %): String == unparse(unparse, a);
+
+   local unparse(recUnparse: % -> String, a: %): String == 
+      null? a => "()";
+      string? a => concat("_"", concat(string a, "_""))
+      symbol? a => name symbol a
+      integer? a => string integer a
+      float? a => "ddd"
+      not pair? a => never
+      s := "("
+      sep := ""
+      while pair? a repeat
+         s := concat(s, concat(sep, recUnparse(car a)))
+	 a := cdr a
+	 sep := " "
+      null? a => concat(s, ")");
+      s := concat(s, concat(" . ", recUnparse a));
+      s := concat(s, ")");
+      s
