@@ -69,7 +69,10 @@ do
     echo "lang.dep should be empty -[$i]"
     exit 1
 done
-
+# Basic.req = "lang"
+# Next.req = "Basic"
+# Next2.req = "Basic"
+# Top.req = Next Next2 Basic
 echo > Basic.req
 echo lang >> Basic.req
 
@@ -91,6 +94,7 @@ precedes lang Basic Next2.dep
 echo > Top.req
 echo Next >> Top.req
 echo Next2 >> Top.req
+echo Basic >> Top.req
 
 $build_dep Top.dep Top.req
 echo ===
