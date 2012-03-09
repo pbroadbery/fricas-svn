@@ -1,4 +1,4 @@
---DEPS: init_SingleInteger ConvertibleTo Integer
+--DEPS: init_SingleInteger ConvertibleTo init_Integer  Boolean 
 #include "axiom.as"
 
 extend SingleInteger: ConvertibleTo Integer with {
