@@ -1,4 +1,4 @@
---DEPS:  SingleInteger init_Character Integer
+--DEPS:  SingleInteger init_Character init_Integer Boolean
 #include "axiom.as"
 
 LString: with {

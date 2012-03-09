@@ -1,4 +1,4 @@
---DEPS:  SingleInteger init_Character Integer runtime/c/LString init_Boolean
+--DEPS:  SingleInteger init_Character init_Integer runtime/c/LString init_Boolean init_String
 #include "axiom.as"
 
 local LArray(T: Type): with {
@@ -44,12 +44,10 @@ local LArray(T: Type): with {
   }
 }
 
-
-
 local LSInteger: with {
    0: %;
    1: %;
-   string: % -> String;
+
    integer: Literal -> %;
    coerce: % -> SInt$Machine;
    coerce: % -> Integer;
@@ -68,13 +66,10 @@ local LSInteger: with {
   0: % == per 0;
   1: % == per 1;
   
-  import { formatSInt: SInt -> String } from Foreign;
-
   integer(l: Literal): % == per convert(l pretend Arr);
   coerce(n: %): SInt$Machine == rep n;
   coerce(n: %): Integer == (convert rep n)@BInt pretend Integer;
   coerce(n: Integer): % == per convert(n pretend BInt);
-  string(a: %): String == { formatSInt rep a }
   
   (<)(a: %, b: %): Boolean == (rep a < rep b) pretend Boolean;
   (>)(a: %, b: %): Boolean == b < a;
@@ -121,8 +116,10 @@ StringLisp: with {
 == add {
      Rep ==> LString;
      import from Rep;
-     
-     CHAR_-AT(s: String, n: Integer): Character == QENUM(s pretend LString, n::SingleInteger);
+     import from LSInteger;
+
+     CHAR_-AT(s: String, n: Integer): Character == QENUM(s pretend LString, 
+     		 	    	      		   	 n::LSInteger pretend SingleInteger);
 
      EQUAL(a: String, b: String): Boolean == never;
      
