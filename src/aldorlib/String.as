@@ -13,7 +13,11 @@ extend String: with {
        new: (NonNegativeInteger, Character) -> %;
        #: % -> SingleInteger;
 
+       string: Integer -> %;
+
        =: (%, %) -> Boolean;
+
+       print: % -> ();
 }
 == add {
    import from SingleInteger;
@@ -38,6 +42,8 @@ extend String: with {
 	     s}
 
    copy!(dest: %, src: %, offset: SingleInteger, nChars: SingleInteger): () == {
+   	    offset < 0 => never;
+	    #dest < offset + nChars => never;
    	    i: SingleInteger := 0;
    	    while (i < nChars) repeat {
 	       dest.(i+offset) := src.i;
@@ -62,4 +68,14 @@ extend String: with {
    set!(s: %, i: SingleInteger, c: Character): () == QESET(rep s, i, c);
    apply(s: %, i: SingleInteger): Character == QENUM(rep s, i);
    char(s: %): Character == s.0;
+
+   string(n: Integer): % == per string n;
+
+   print(s: %): () == {
+   	    import from IO;
+	    print rep s; 
+	    nl: Rep := "_
+";
+	    print nl;
+   }
 }

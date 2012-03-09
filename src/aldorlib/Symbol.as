@@ -6,12 +6,14 @@ extend Symbol: with {
    coerce: String -> %;
    #: String -> %;
    =: (%, %) -> Boolean;
+   name: % -> String;
 }
 == add {
    Rep ==> String;
    import from String;
    coerce(x: String): % == per x;
    #(x: String): % == per x;
-   
+   name(a: %): String == rep a;
+
    (a: %) = (b: %): Boolean == rep a = rep b;
 }
