@@ -1,11 +1,12 @@
 # (Patch) Subject: Re: aldor/axiom interoperability
 # http://article.gmane.org/gmane.comp.mathematics.axiom.devel/19315/match=broadbery
 
-subdir=@subdir@/
+subdir=src/aldor/
 VPATH=@srcdir@
 MAKEFLAGS += -Wwarn-undefined-variables
 ALDOR=@ALDOR@
 
+ALDORROOT=$(dir $ALDOR)..
 ###################################################################
 # WARNING: THE FOLLOWING DOCUMENTATION MIGHT BE INCORRECT.
 # 

@@ -1,7 +1,10 @@
+subdir=src/aldor/
+srcdir=@srcdir@
 VPATH=@srcdir@
 ALDOR=@ALDOR@
 INTERPSYS = DAASE=$(fricas_targetdir) $(fricas_target_bindir)/AXIOMsys
 
+ALDORROOT=$(dir $(ALDOR))
 # We assume that the file al/libaxiom.al is up-to-date.
 # ALDORROOT should be set correctly and ${ALDORROOT}/lib/libfoam.al
 # must exist.
@@ -19,7 +22,7 @@ aldor_lsp_files = $(patsubst %,lsp/%.lsp, $(aldor_srcs))
 lsp/runtime.lsp: runtime.ao lsp/.dir
 	$(ALDOR) -flsp=$@ $<
 
-runtime.ao: $(ALDORROOT)/lib/libfoam.al ao/.dir
+runtime.ao: $(firstword $(ALDORROOT))../share/lib/libfoam.al ao/.dir
 	ar x $< $@
 
 $(aldor_ao_files): ao/%.ao: al/libaxiom.al ao/.dir
