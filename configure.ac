@@ -780,16 +780,25 @@ AC_ARG_ENABLE(aldor,
    esac])
 AC_SUBST(ALDORSOURCE)
 
+AC_ARG_WITH([aldor], [AS_HELP_STRING([--with-aldor],[specify place of aldor root])],
+		     [AS_IF([test -r "$withval/bin/aldor"], [ALDORROOT=$withval],
+		            [AC_MSG_ERROR([specified aldor root does not contain the expected files $withval/bin/aldor])])])
+
 ###################################################################
 ## If one of the Aldor related tests fail we should warn and
 ## not build the Aldor interface.
 
 if test x"$BUILD_ALDOR_INTERFACE" = xyes ; then
   ## check whether Aldor is available
-  AC_CHECK_PROGS([ALDOR], [aldor])
-  if test -z $ALDOR; then
-    AC_MSG_WARN([Aldor not found.])
-    AC_MSG_ERROR([prerequisites for Aldor interface missing])
+  ## check whether Aldor is available
+  ## Ideally, we'd avoid substituting ALDORROOT - the aldor executable
+  ## should be able to find its own backside without a map
+  if test -x "$ALDORROOT/bin/aldor"; then
+    ALDOR="$ALDORROOT/bin/aldor -B $ALDORROOT"
+    AC_SUBST(ALDOR)
+  else
+    AC_MSG_WARN([Aldor not found. ($ALDORROOT)])
+    AC_MSG_ERROR([prerequisites for Aldor interface missing.])
     BUILD_ALDOR_INTERFACE=no
   fi
 
@@ -802,16 +811,16 @@ if test x"$BUILD_ALDOR_INTERFACE" = xyes ; then
   AC_CHECK_PROGS([WGET], [wget])
 
   ## check for $ALDORROOT/include/aldor.conf
-  if test -z "$ALDORROOT" || ! test -f "$ALDORROOT/include/aldor.conf"; then
+if test -z $ALDORROOT || ! test -f $ALDORROOT/include/aldor.conf -o -f $ALDORROOT/share/include/aldor.conf; then
     AC_MSG_WARN([The environment variable ALDORROOT is not set.])
-    AC_MSG_ERROR([prerequisites for Aldor interface missing])
+    AC_MSG_ERROR([prerequisites for Aldor interface missing..])
     BUILD_ALDOR_INTERFACE=no
   fi
 
   ## check for $ALDORROOT/lib/libfoam.al (needed for aldor interface)
-  if ! test -f "$ALDORROOT/lib/libfoam.al"; then
+  if ! test -f "$ALDORROOT/lib/libfoam.al" -o -f "$ALDORROOT/share/lib/libfoam.al" ; then
     AC_MSG_WARN([Couldn't find libfoam.al.])
-    AC_MSG_ERROR([prerequisites for Aldor interface missing])
+    AC_MSG_ERROR([prerequisites for Aldor interface missing...])
     BUILD_ALDOR_INTERFACE=no
   fi
 fi
