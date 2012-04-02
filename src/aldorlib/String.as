@@ -1,4 +1,5 @@
---DEPS:  init_String init_Character init_List Integer runtime/c/Local SingleInteger NonNegativeInteger
+--DEPS: init_String init_Character init_List Integer runtime/ARCH/Local 
+--DEPS: SingleInteger NonNegativeInteger
 #include "axiom"
 
 extend String: with {
@@ -13,6 +14,8 @@ extend String: with {
        new: (NonNegativeInteger, Character) -> %;
        #: % -> SingleInteger;
 
+       set!: (%, SingleInteger, Character) -> ();
+       apply: (%, SingleInteger) -> Character;
        string: Integer -> %;
 
        =: (%, %) -> Boolean;
@@ -62,8 +65,18 @@ extend String: with {
      result
    }
 
-   new(n: NonNegativeInteger, c: Character): % == per NEW(n::Integer::SingleInteger, c);
-   new(n: SingleInteger, c: Character): % == per NEW(n, c);
+   new(n: NonNegativeInteger, c: Character): % == {
+       new(n::Integer::SingleInteger, c);
+   }
+   new(n: SingleInteger, c: Character): % == {
+       s := per NEW(n);
+       i: SingleInteger := 0;
+       while i < n repeat {
+       	     s.i := c;
+	     i := i+1;
+       }
+       s
+   }
 
    set!(s: %, i: SingleInteger, c: Character): () == QESET(rep s, i, c);
    apply(s: %, i: SingleInteger): Character == QENUM(rep s, i);

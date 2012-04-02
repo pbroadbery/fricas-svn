@@ -1,24 +1,32 @@
+--DEPS: StreamAggregate FiniteLinearAggregate ExtensibleLinearAggregate String NonNegativeInteger_OrderedAbelianMonoidSup
 #include "axiom.as"
 
-import from Boolean;
+#pile
+import from Boolean
+import from System
+import from String
 
-ListAggregate(S:Type): Category == Join(StreamAggregate S,
-   FiniteLinearAggregate S, ExtensibleLinearAggregate S) with
-      list: S -> %
+ListAggregate(S:Type): Category == Join(StreamAggregate S, FiniteLinearAggregate S, ExtensibleLinearAggregate S)
+ with
+  list: S -> %
         ++ list(x) returns the list of one element x.
- add
+  setrest!: (%, %) -> %
+  	++ Dunno why I need this
+  default
+   import from UniversalSegment Integer
+   import from NonNegativeInteger
+   import from Integer
+   
    cycleMax ==> 1000
 
-   mergeSort: ((S, S) -> Boolean, %, Integer) -> %
-
-   sort!(f, l)       == mergeSort(f, l, #l)
-   list x                  == concat(x, empty())
-   reduce(f, x)            ==
+   sort!(f: (S, S) -> Boolean, l: %): %       == mergeSort(f, l, (#l)::Integer)
+   list(x: S): %                 == concat(x, empty())
+   reduce(f: (S, S) -> S, x: %): S ==
      empty? x => error "reducing over an empty list needs the 3 argument form"
      reduce(f, rest x, first x)
-   merge(f, p, q)          == merge!(f, copy p, copy q)
+   merge(f: (S, S) -> Boolean, p: %, q: %): % == merge!(f, copy p, copy q)
 
-   select!(f, x) ==
+   select!(f: S -> Boolean, x: %): % ==
      while not empty? x and not f first x repeat x := rest x
      empty? x => x
      y := x
@@ -28,7 +36,7 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
                     else (z := rest z; setrest!(y, z))
      x
 
-   merge!(f, p, q) ==
+   merge!(f: (S, S) -> Boolean, p: %, q: %): % ==
      empty? p => q
      empty? q => p
      eq?(p, q) => error "cannot merge a list into itself"
@@ -42,7 +50,7 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
      setrest!(t, if empty? p then q else p)
      r
 
-   insert!(s:S, x:%, i:Integer) ==
+   insert!(s:S, x:%, i:Integer): % ==
      i < (m := minIndex x) => error "index out of range"
      i = m => concat(s, x)
      y := rest(x, (i - 1 - m)::NonNegativeInteger)
@@ -50,7 +58,7 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
      setrest!(y, concat(s, z))
      x
 
-   insert!(w:%, x:%, i:Integer) ==
+   insert!(w:%, x:%, i:Integer): % ==
      i < (m := minIndex x) => error "index out of range"
      i = m => concat!(w, x)
      y := rest(x, (i - 1 - m)::NonNegativeInteger)
@@ -59,7 +67,7 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
      concat!(y, z)
      x
 
-   remove!(f:S -> Boolean, x:%) ==
+   remove!(f:S -> Boolean, x: %): % ==
      while not empty? x and f first x repeat x := rest x
      empty? x => x
      p := x
@@ -69,14 +77,14 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
                     else (p := q; q := rest q)
      x
 
-   delete!(x:%, i:Integer) ==
+   delete!(x:%, i:Integer): % ==
      i < (m := minIndex x) => error "index out of range"
      i = m => rest x
      y := rest(x, (i - 1 - m)::NonNegativeInteger)
-     setrest!(y, rest(y, 2))
+     setrest!(y, rest(y, 2::NonNegativeInteger))
      x
 
-   delete!(x:%, i:UniversalSegment(Integer)) ==
+   delete!(x:%, i:UniversalSegment(Integer)): % ==
      (l := lo i) < (m := minIndex x) => error "index out of range"
      h := if hasHi i then hi i else maxIndex x
      h < l => x
@@ -85,27 +93,28 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
      setrest!(t, rest(t, (h - l + 2)::NonNegativeInteger))
      x
 
-   find(f, x) ==
+   find(f: S -> Boolean, x: %): Partial S ==
      while not empty? x and not f first x repeat x := rest x
-     empty? x => "failed"
-     first x
+     empty? x => failed()
+     success(first x)
 
-   position(f:S -> Boolean, x:%) ==
-     for k in minIndex(x).. while not empty? x and not f first x repeat
+   position(f:S -> Boolean, x:%): Integer ==
+     k: Integer := 0
+     for free k in minIndex(x).. while not empty? x and not f first x repeat
        x := rest x
      empty? x => minIndex(x) - 1
      k
 
-   mergeSort(f, p, n) ==
+   mergeSort(f: (S, S) -> Boolean, p: %, n: Integer): % ==
      if n = 2 and f(first rest p, first p) then p := reverse! p
      n < 3 => p
-     l := (n quo 2)::NonNegativeInteger
+     l := (n quo 2)
      q := split!(p, l)
      p := mergeSort(f, p, l)
      q := mergeSort(f, q, n - l)
      merge!(f, p, q)
 
-   sorted?(f, l) ==
+   sorted?(f: (S, S) -> Boolean, l: %): Boolean ==
      empty? l => true
      p := rest l
      while not empty? p repeat
@@ -113,25 +122,25 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
        p := rest(l := p)
      true
 
-   reduce(f, x, i) ==
+   reduce(f: (S, S) -> S, x: %, i: S): S ==
      r := i
      while not empty? x repeat (r := f(r, first x); x := rest x)
      r
 
    if S has SetCategory then
-      reduce(f, x, i,a) ==
+      reduce(f: (S, S) -> S, x: %, i: S, a: S): S ==
         r := i
         while not empty? x and r ~= a repeat
           r := f(r, first x)
           x := rest x
         r
 
-   new(n, s) ==
+   new(n: Integer, s: S): % ==
      l := empty()
      for k in 1..n repeat l := concat(s, l)
      l
 
-   map(f, x, y) ==
+   map(f: (S, S) -> S, x: %, y: %): % ==
      z := empty()
      while not empty? x and not empty? y repeat
        z := concat(f(first x, first y), z)
@@ -152,7 +161,7 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
 --      z := concat!(z, map(f(d, #1), y))
 --   z
 
-   reverse! x ==
+   reverse!(x: %): % ==
      empty? x => x
      empty?(y := rest x) => x
      setrest!(x, empty())
@@ -163,7 +172,7 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
        y := z
      x
 
-   copy x ==
+   copy(x: %): % ==
      y := empty()
      for k in 0.. while not empty? x repeat
        k = cycleMax and cyclic? x => error "cyclic list"
@@ -171,7 +180,7 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
        x := rest x
      reverse! y
 
-   copyInto!(y, x, s) ==
+   copyInto!(y: %, x: %, s: Integer): % ==
      s < (m := minIndex y) => error "index out of range"
      z := rest(y, (s - m)::NonNegativeInteger)
      while not empty? z and not empty? x repeat
@@ -181,26 +190,27 @@ ListAggregate(S:Type): Category == Join(StreamAggregate S,
      y
 
    if S has SetCategory then
-     position(w, x, s) ==
+     position(w: S, x: %, s: Integer): Integer ==
        s < (m := minIndex x) => error "index out of range"
        x := rest(x, (s - m)::NonNegativeInteger)
-       for k in s.. while not empty? x and w ~= first x repeat
+       k: Integer := 0
+       for free k in s.. while not empty? x and w ~= first x repeat
          x := rest x
        empty? x => minIndex x - 1
        k
 
-     removeDuplicates! l ==
+     removeDuplicates!(l: %): % ==
        p := l
        while not empty? p repeat
          p := setrest!(p, remove!((x : S) : Boolean +-> x = first p, rest p))
        l
 
    if S has OrderedSet then
-     x < y ==
+     import from S
+     (x: %) < (y: %): Boolean ==
         while not empty? x and not empty? y repeat
           first x ~= first y => return(first x < first y)
           x := rest x
           y := rest y
         empty? x => not empty? y
         false
-

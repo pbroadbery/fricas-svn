@@ -3,4 +3,9 @@
 #pile
 
 extend Character: OrderedFinite with _
- == add
+== add
+ coerce(a: %): OutputForm == never
+ size(): NonNegativeInteger == never
+ index(p: PositiveInteger): % == never
+ lookup(c: %): PositiveInteger == never
+

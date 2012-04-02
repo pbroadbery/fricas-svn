@@ -1,4 +1,4 @@
---DEPS: init_PrimitiveArray NonNegativeInteger Integer init_List runtime/c/Local
+--DEPS: init_PrimitiveArray NonNegativeInteger Integer init_List runtime/ARCH/Local
 #include "axiom.as"
 
 #pile

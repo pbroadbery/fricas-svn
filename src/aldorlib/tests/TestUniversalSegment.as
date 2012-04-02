@@ -1,10 +1,13 @@
---DEPS: List OutputForm UniversalSegment runtime/c/rtexns Integer_OrderedRing
+--DEPS: List OutputForm UniversalSegment runtime/ARCH/rtexns Integer_OrderedRing
+--DEPS: tests/TestCategory
 #include "axiom.as"
 
 import from OutputForm;
 import from String;
-       
-foo(): () == {
+
+TestUniversalSegment: TestCategory with
+== add {
+  test(): () == {
        import from IO;
        import from List Integer;
        import from UniversalSegment Integer;
@@ -20,8 +23,6 @@ foo(): () == {
 --       assertTrue([x for x in 1..2] = [1,2]);
        "done"
 }
-
-
-foo();
+}
 
 assertTrue(x: Boolean): () == if not x then never;

@@ -7,29 +7,34 @@ VPATH=@srcdir@
 MAKEFLAGS += -Wwarn-undefined-variables
 ALDOR=@ALDOR@
 
-scripts := build-dep show 
+scripts := build-dep show
 testscripts := test-build-dep
 
-lang := lang init_Generator Void Tuple Basic 
-environment := System init_XLisp 
+lang := lang init_Generator Void Tuple Basic
+environment := System
 
 attributes := unitsKnown noZeroDivisors CommutativeStar			\
 	      canonicalUnitNormal finiteAggregate shallowlyMutable	\
 	      CharacteristicNonZero CharacteristicZero Approximate	\
 	      additiveValuation
 
-integers := init_NonNegativeInteger init_PositiveInteger		\
-	    init_SingleInteger PositiveInteger Integer			\
-	    NonNegativeInteger Integer_SetCategory			\
-	    Integer_OrderedRing Integer_IntegralDomain IntegerMod	\
-	    SingleInteger NonNegativeInteger_OrderedAbelianMonoidSup 
+integers := x/I init_Integer init_NonNegativeInteger		\
+	    init_PositiveInteger init_SingleInteger		\
+	    PositiveInteger_Base PositiveInteger Integer	\
+	    NonNegativeInteger Integer_SetCategory		\
+	    Integer_OrderedRing Integer_IntegralDomain		\
+	    Integer_EuclideanDomain IntegerMod SingleInteger	\
+	    NonNegativeInteger_OrderedAbelianMonoidSup		\
+
+#	    IntegerNumberSystem
 
 basics := CoercibleTo FullyRetractableTo RetractableTo ConvertibleTo	\
           SetCategory init_String BasicType OrderedFinite		\
           init_Boolean String init_InputForm RepeatedDoubling		\
           RepeatedSquaring init_Symbol Symbol Symbol_SetCategory	\
           init_Character Character_Base Logic Character init_Pointer	\
-          String_SetCategory String_OneDimensionalArrayAggregate
+          String_SetCategory String_OneDimensionalArrayAggregate	\
+          Reference
 
 outputs := init_OutputForm OutputForm NumberFormats	\
 	   OutputFormLisp
@@ -40,7 +45,7 @@ maths := AbelianGroup CancellationAbelianMonoid AbelianMonoid		\
          Module CommutativeRing EntireRing Algebra DifferentialRing	\
          DifferentialExtension PartialDifferentialRing Field0		\
          StepThrough Finite FullyLinearlyExplicitRingOver		\
-         LinearlyExplicitRingOver 
+         LinearlyExplicitRingOver
 
 domains := PrincipalIdealDomain0 PrincipalIdealDomain GcdDomain0	\
            GcdDomain IntegralDomain EuclideanDomain0 EuclideanDomain	\
@@ -49,7 +54,7 @@ domains := PrincipalIdealDomain0 PrincipalIdealDomain GcdDomain0	\
 floats := init_DoubleFloat init_Float DoubleFloat_SetCategory	\
 	  DoubleFloat
 
-_sexprs := init_SExpression SExpressionCategory 
+_sexprs := init_SExpression SExpressionCategory
 sexprs  := $(patsubst %, sexpr/%, $(_sexprs))
 
 fractions := Localize init_Fraction DivisionRing LocalAlgebra	\
@@ -59,16 +64,20 @@ factoreds := init_Factored
 
 randoms := RandomNumberGenerator RandomNumberSource
 
-poly := PolynomialRing FiniteAbelianMonoidRing AbelianMonoidRing	\
-	SingletonAsOrderedSet FreeModule AbelianProductCategory		\
-	IndexedDirectProductCategory IndexedDirectProductObject		\
-	FreeModuleCategory UnivariatePolynomialCategory0		\
+poly := x/A x/AC PolynomialRing FiniteAbelianMonoidRing			\
+	AbelianMonoidRing SingletonAsOrderedSet FreeModule		\
+	AbelianProductCategory IndexedDirectProductCategory		\
+	IndexedDirectProductObject FreeModuleCategory			\
+	UnivariatePolynomialCategory0					\
 	SparseUnivariatePolynomial_FiniteAbelianMonoidRing		\
 	PolynomialCategory0 init_SparseUnivariatePolynomial		\
 	SparseUnivariatePolynomial_UnivariatePolynomialCategory0	\
 	PseudoRemainderSequence UnivariatePolynomialCategory		\
 	PolynomialCategory SparseUnivariatePolynomial_R			\
 	SparseUnivariatePolynomial_UnivariatePolynomialCategory
+
+multpoly := #Polynomial UserDefinedPartialOrdering	\
+	    #SparseMultivariatePolynomial IndexedExponents
 
 orders := PartialOrder OrderedSet Comparable OrderedAbelianGroup	\
 	  OrderedAbelianMonoid OrderedAbelianSemiGroup			\
@@ -82,11 +91,11 @@ datatypes := init_List Aggregate HomogeneousAggregate List Fold		\
 	     List_StreamAggregate FiniteLinearAggregate			\
 	     FiniteLinearAggregateSort IndexedOneDimensionalArray	\
 	     ExtensibleLinearAggregate List_ExtensibleLinearAggregate	\
-	     BitAggregate IndexedBits
+	     BitAggregate IndexedBits ListAggregate List_ListAggregate
 
-segments := init_UniversalSegment init_Segment SegmentCategory	\
-	    SegmentExpansionCategory UniversalSegment		\
-	    Segment_SegmentCategory Segment
+segments := x/S x/S1 x/S2 x/S3 x/H x/LU init_UniversalSegment		\
+	    init_Segment SegmentCategory SegmentExpansionCategory	\
+	    UniversalSegment Segment_SegmentCategory Segment
 
 equations := Evalable InnerEvalable Equation_SetCategory	\
 	     init_Equation
@@ -105,162 +114,292 @@ linalg := init_Vector init_Matrix Matrix_TwoDimensionalArrayCategory	\
 axioms := axioms/Stream axioms/RandomGenerator axioms/AxiomEnv	\
 	  axioms/Axiom axioms/AxiomConstructorPackage
 
-tests := tests/TestVector tests/TestInt tests/TestPrimitiveArray	\
-	 tests/TestTuple tests/TestList tests/TestPolynomialRing	\
-	 tests/TestList_StreamAggregate tests/TestSUP0			\
-	 tests/TestOutputForm tests/TestString				\
-	 tests/TestIndexedDirectProduct tests/TestUniversalSegment	\
-	 tests/TestPseudoRemainderSequence tests/Test0
+testsupport := tests/Assert tests/Assertions tests/TestCategory
 
-runtime := runtime/c/Local runtime/c/rtexns runtime/c/LString	\
-	   runtime/c/SExpression
+tests := tests/TestOutputForm tests/TestSExpression tests/TestInt	\
+	 tests/TestString tests/TestTuple tests/TestList		\
+	 tests/TestPrimitiveArray tests/TestList_StreamAggregate	\
+	 tests/TestVector tests/TestIndexedDirectProduct		\
+	 tests/TestUniversalSegment tests/TestPseudoRemainderSequence	\
+	 tests/TestPolynomialRing tests/TestSUP0 tests/TestP0
 
-library := x/P Pol $(lang) $(runtime) $(sexprs) $(outputs) $(randoms)	\
-	   $(axioms) $(arrays) $(tests) $(datatypes) $(linalg)		\
-	   $(trig) $(factoreds) $(poly) $(integers)$(floats)		\
+runtime_native := runtime/native/Local runtime/native/rtexns	\
+		runtime/native/LString runtime/native/SExpression
+
+other := GaussianInteger
+
+runtime_lisp := runtime/lisp/Local runtime/lisp/rtexns runtime/lisp/LString	\
+		runtime/lisp/SExpression
+
+library := $(lang) $(other) $(sexprs) $(outputs) $(randoms) $(axioms)	\
+	   $(arrays) $(tests) $(testsupport) $(datatypes) $(linalg)	\
+	   $(trig) $(factoreds) $(poly) $(integers) $(floats)		\
 	   $(fractions) $(maths) $(attributes) $(environment)		\
-	   $(basics) $(segments) $(orders) $(domains) $(equations)
+	   $(basics) $(segments) $(orders) $(domains) $(equations)	\
+	   $(multpoly)
 
-opts_VectorCategory := -WD+tipBup -WD+tf -Mpreview
-#opts_runtime/c/XLisp2 := -WD+tipBup -WD+tfs 
+opts_x/I := -WD+inline -WD+inlCall -Q9 -WD+inlCallInfo
 
-reqfiles := $(patsubst %,%.req,$(library))
-depfiles := $(patsubst %,%.dep,$(library))
-aofiles := $(patsubst %,%.ao,$(library))
-fmfiles := $(patsubst %,%.fm,$(library))
+reqfiles := $(patsubst %, common/%.req, $(library) $(runtime_native) $(runtime_lisp))
 
-all: run-all-tests gloop-tests compile_aofiles
+native_library := $(patsubst %, native/%, $(library) $(runtime_native))
+lisp_library := $(patsubst %, lisp/%, $(library) $(runtime_lisp))
 
-compile_aofiles: $(aofiles) 
-compile_fmfiles: $(fmfiles) 
-gloop-tests: $(patsubst %,gloop-%, $(tests))
+native_tests := $(patsubst %, native/%, $(tests))
+lisp_tests := $(patsubst %, lisp/%, $(tests))
 
--include $(patsubst %,%.mk,$(library))
+all: run-all-tests check-tests compile_aofiles
 
-$(depfiles): %.dep: $(srcdir)/%.as
+lisp: lisp/load.input
+	make $(patsubst %,lisp/%.lsp, $(shell cat lisp/load.input.dep))
 
-$(patsubst %,%.mk, $(library)): %.mk: $(srcdir)/%.as
+list-srcfiles:
+	@echo $(patsubst %, %.as, $(library))
+
+compile-aofiles: $(patsubst %,%.ao,$(native_library))
+compile-fmfiles: $(patsubst %,%.fm,$(native_library))
+compile-ofiles: $(patsubst %,%.o, $(native_library))
+compile-tests: $(patsubst %, %.exe, $(native_tests))
+
+compile_axiom: $(patsubst %, %.lsp, $(lisp_library))
+
+gloop-tests: $(patsubst %,gloop-%, $(filter %/Test%, $(native_tests)))
+check-tests: $(patsubst %,check-%, $(tests))
+
+-include $(patsubst %,%.mk, $(native_library))
+-include $(patsubst %,%.mk, $(lisp_library))
+
+$(patsubst %,%.dep,$(library)): %.dep: $(srcdir)/%.as
+
+dependencies = $(shell cat $(srcdir)/$*.as | sed -n -e 's/ARCH/$(arch)/g;/^--DEPS:/s/^--DEPS://p')
+
+$(patsubst %,%.mk, $(native_library)): arch = native
+$(patsubst %,%.mk, $(native_library)): stem = native/$*
+$(patsubst %,%.mk, $(native_library)): native/%.mk: $(srcdir)/%.as
 	@echo MK $@
 	@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 	@echo > $@.tmp
-	@for i in $$(cat $(srcdir)/$*.as | sed -n -e '/^--DEPS:/s/^--DEPS://p'); \
+	@for i in $(patsubst %, %, $(dependencies));\
 	 do \
-	 	echo "$*.ao: $$i.ao" >> $@.tmp;       \
-	 	echo "$*.dep: $$i.dep" >> $@.tmp;     \
-	 	echo "gloop-$*: $$i.ao" >> $@.tmp;    \
-	 	echo "gloop-$*: $$i.dep" >> $@.tmp;    \
+		echo "$(stem).ao: native/$$i.ao" >> $@.tmp;       \
+		echo "$(stem).dep: native/$$i.dep" >> $@.tmp;     \
+		echo "gloop-$*: native/$$i.ao" >> $@.tmp;    \
+		echo "gloop-$*: native/$$i.dep" >> $@.tmp;    \
 	 done;  \
 	 mv $@.tmp $@
 
-$(reqfiles): %.req: $(srcdir)/%.as 
+$(patsubst %,%.mk, $(lisp_library)): arch = lisp
+$(patsubst %,%.mk, $(lisp_library)): stem = lisp/$*
+$(patsubst %,%.mk, $(lisp_library)): lisp/%.mk: $(srcdir)/%.as
+	@echo MK $@
+	@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
+	@echo > $@.tmp
+	@for i in $(patsubst %, lisp/%, $(dependencies));\
+	 do \
+		echo "$(stem).ao: $$i.ao" >> $@.tmp;       \
+		echo "$(stem).dep: $$i.dep" >> $@.tmp;     \
+	 done;  \
+	 mv $@.tmp $@
+
+$(reqfiles): common/%.req: $(srcdir)/%.as
+	@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 	@echo REQ $@
 	@echo > $@
 	@for i in $$(cat $(srcdir)/$*.as | sed -n -e '/^--DEPS:/s/^--DEPS://p'); \
 	 do echo "$$i" >> $@; done
+V := 0
+V_0  := @
+V_1 :=
 
-C_ :=
+C_  :=
+C_F := -WD+lib -WD+tf -WD+tfFloat
 C_L := -WD+lib -WD+symeFill
-C_T := -Mpreview -WD+tipBup
-C_T2 := -Mpreview -WD+tipBup -WD+tfs
+C_T := -Mpreview -WD+tipBup -WD+tipTdn -WD+titf
+C_T2 := -Mpreview -WD+tipBup -WD+tipTdn -WD+tf -WD+symeHas
+C_T3 := -Mpreview -WD+tipBup -WD+tfs
 
-O_ := 
-O_0 := -O
+O_ := -O
+O_0 :=
 O_1 := -O
+
 define aldor
-$(ALDOR) -fap=$*.ap -I$(srcdir) -Y$(dir $*) \
-	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(O_$(O)) $(opts_$*) -fasy -fao=$*.ao $(srcdir)/$*.as
+$(ALDOR) -fap=$(arch)/$*.ap -I$(srcdir) -Y$(arch)/$(dir $*) \
+	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(O_$(O)) $(opts_$*) -fasy=$(dir $@)$(notdir $*).asy \
+	 -fao=$@ $(srcdir)/$*.as
 endef
 
 I_ :=
 I_D := -WD+fint
+
 define aldor_interp
-(cd $(dir $*); $(ALDOR) -I$(abs_srcdir) -Y. \
-	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(I_$(I)) $(O_$(O)) $(opts_$*) -ginterp $(abs_srcdir)/$*.as)
+# cd is required because the interpreter can't find the current .ao file
+# without it.
+[ ! -z $(arch) ]
+(cd $(arch)/$(dir $*); $(ALDOR) -I$(abs_srcdir) -Y.	\
+	 -lAxiomLib=axiom_$(notdir $*)			\
+	 $(C_$(C)) $(I_$(I)) $(O_$(O))			\
+	 $(opts_$*) -ginterp $(notdir $*).as)
 endef
 
 define aldor_interp_cmd
-(cd $(dir $*); gdb --args $(ALDOR) -I$(abs_srcdir) -Y. \
-	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(I_$(I)) $(O_$(O)) $(opts_$*) -ginterp $(abs_srcdir)/$*.as)
+(cd $(arch)/$(dir $*); gdb --args $(ALDOR) -I$(abs_srcdir) -Y. \
+	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(I_$(I)) $(O_$(O)) $(opts_$*) -ginterp $(arch)/$*.ao)
 endef
 
 define create_library
-	rm -f $(dir $@)libaxiom_$(notdir $*).al; \
-	for i in $$(cat $*.dep); \
+	[ ! -z $(arch) ]
+	rm -f $(arch)/$(dir $*)libaxiom_$(notdir $*).al; \
+	for i in $$(cat $(arch)/$*.dep); \
 	do \
-		ar r $(dir $*)libaxiom_$(notdir $*).al $$i.ao; \
+		if [ ! -f $(arch)/$$i.ao ]; then echo "missing $$i"; exit 1; fi;\
+		ar r $(arch)/$(dir $*)libaxiom_$(notdir $*).al $(arch)/$$i.ao; \
 	done;
 endef
-$(aofiles): all-build-tests
-$(aofiles): %.ao: $(srcdir)/%.as %.dep
-	@$(call build-ignoring, %.dep, $?, \
+
+$(patsubst %,%.ao,$(native_library)): arch=native
+$(patsubst %,%.ao,$(native_library)): all-build-tests
+$(patsubst %,%.ao,$(native_library)): native/%.ao: $(srcdir)/%.as native/%.dep
+	$(V_$(V))$(call build-ignoring, %.dep, $?, \
+		echo AO $@;		\
+		$(create_library)	\
+		$(aldor))
+	@[ -f $@ ]
+
+$(patsubst %,%.ao,$(lisp_library)): arch=lisp
+$(patsubst %,%.ao,$(lisp_library)): all-build-tests
+$(patsubst %,%.ao,$(lisp_library)): lisp/%.ao: $(srcdir)/%.as lisp/%.dep
+	$(V_$(V))$(call build-ignoring, %.dep, $?, \
 		echo AO $@;		\
 		$(create_library)	\
 		$(aldor))
 
-$(patsubst %, %.cmd, $(library)): %.cmd:
+
+$(patsubst %, %.cmd, $(native_library)): arch=native
+$(patsubst %, %.cmd, $(native_library)): native/%.cmd:
 	gdb --args $(aldor)
 
-define build-ignoring 
-	$(if $(filter-out $(1), $(2)), $(3), echo "Ignoring changes to $(2)")
+define build-ignoring
+	$(if $(filter-out $(1), $(2)), $(3), true)
 endef
 
-$(patsubst %, %.fm, $(library)): %.fm: %.ao
+$(patsubst %, %.fm, $(native_library) $(lisp_library)): %.fm: %.ao
 	$(ALDOR) -ffm=$@ $*.ao
 
-$(patsubst %, %.c, $(library)): %.c: %.ao
+$(patsubst %, %.c, $(native_library)): %.c: %.ao
 	$(ALDOR) -fc=$@ $*.ao
 
-$(patsubst %, %.lsp, $(library)): %.lsp: %.ao
-	$(ALDOR) -flsp=$@ $*.ao
+$(patsubst %, %.o, $(native_library)): %.o: %.ao
+	$(ALDOR) -Z db -fc=$*.c -fo=$@ $*.ao
 
-$(patsubst %, %.dep,$(library) ): build-dep
-$(patsubst %, %.dep,$(library) ): %.dep: %.req
+$(patsubst %, %.exe, $(native_tests)): %.exe: %.ao %.dep
+	rm -f $@
+	make $(patsubst %, native/%.o, $(shell cat $*.dep))
+	$(ALDOR) -Zdb -fc=$(patsubst %.exe,%.c, $@) -fx=$@ $*.ao $(patsubst %, native/%.o, $(shell cat $*.dep))
+
+$(patsubst %, %.lsp, $(lisp_library)): %.lsp: %.ao
+	@echo LSP $*
+	@$(ALDOR) -flsp=$@ $*.ao
+
+archForTarget = $(firstword $(subst /,$(space),$@))
+
+$(patsubst %, %.dep,$(lisp_library)): build-dep
+$(patsubst %, %.dep, $(lisp_library)): lisp/%.dep: common/%.req
+
+$(patsubst %, %.dep,$(native_library)): build-dep
+$(patsubst %, %.dep, $(native_library)): native/%.dep: common/%.req
+
+$(patsubst %, %.dep, $(lisp_library) $(native_library)): %.dep:
+	@[ -d $(dir $@) ] || mkdir -p $(dir $@)
 	@echo DEP $@
-	@./build-dep $@.tmp $*.req
+	@./build-dep $(firstword $(subst /,$(space),$@)) $@.tmp $(filter %.req, $^)
 	@mv $@.tmp $@
 
-$(patsubst %, %.dep-old,$(library) ): %.dep-old: %.req
-	@echo DEP $@
-	@echo > $@.tmp
-	@for i in $$(cat $*.req); \
-	 do d=$$(basename $$i .dep); \
-	   for j in $$(cat $$i.dep); do grep -q "^$$j$$" $@.tmp || echo $$j >> $@.tmp; done; \
-	 echo $(basename $$d .dep)>> $@.tmp;  \
-	 done;\
-	 mv $@.tmp $@
 
 $(patsubst %, show-%, $(library)): show
 $(patsubst %, show-%, $(library)): show-%: %.ao
 	aldor="$(ALDOR)" srcdir=$(srcdir) ./show $*
 
-$(patsubst %, gloop-%, $(library)): gloop-%: %.dep
+gloop-tests: $(patsubst %,gloop-%, $(tests))
 
-$(patsubst %, gloop-%, $(library)): gloop-%: 
+$(patsubst %, native/%Run.as, $(tests)): $(srcdir)/Makefile.in
+$(patsubst %, native/%Run.as, $(tests)): %Run.as: $(srcdir)/tests/TestSkel.as
+	cat $(srcdir)/tests/TestSkel.as | sed -e 's/TEST/$(notdir $*)/g' > $@.tmp
+	mv $@.tmp $@
+
+$(patsubst %, native/%Run.dep, $(tests)): native/%Run.dep: native/%.dep
+	@echo DEP_TEST $*
+	cat native/$*.dep > $@.tmp
+	echo $* >> $@.tmp
+	mv $@.tmp $@
+
+$(patsubst %, native/%Run.ao, $(tests)): arch=native
+$(patsubst %, native/%Run.ao, $(tests)): native/%Run.ao: native/%.ao
+$(patsubst %, native/%Run.ao, $(tests)): native/%.ao: native/%.as native/%.dep
+	@echo AO_TEST $*
+	@$(create_library)
+	@$(aldor_interp)
+
+#
+# Gloop-TestX will run a test
+#
+
+$(patsubst %, gloop-%, $(library)): arch=native
+$(patsubst %, gloop-%, $(tests)): gloop-%: gloop-%Run
+
+$(patsubst %, gloop-%Run, $(tests)): stem=$*
+$(patsubst %, gloop-%Run, $(tests)): gloop-%: native/%.ao
+	@echo INTERP_TEST $(stem)
 	$(create_library)
 	$(aldor_interp)
 
-$(patsubst %, gloop-%.cmd, $(library)): gloop-%.cmd: 
-	$(aldor_interp_cmd)
+#
+# Check-TestX will run a test if it, or any dependencies, have changed
+#
 
-blacklist := tests/Test0
-axiom-library: $(foreach elt,$(filter-out $(blacklist), $(library)), $(elt).lsp)
+$(patsubst %, check-%, $(tests)): check-%: native/%.checked
 
-gloop-tests: $(patsubst %,gloop-%,$(tests))
+$(patsubst %, native/%.checked, $(tests)): %.checked: %.ao
+$(patsubst %, native/%.checked, $(tests)): native/%.checked:
+	make gloop-$*
+	touch $@
 
-load.input.req: Makefile
-	for i in $(library); do echo $$i; done > $@
+#
+# lisp interface.
+#
 
-load.input.dep: load.input.req $(patsubst %,%.dep,$(library))
-	./build-dep $@.tmp load.input.req
+lisp_subset := $(basics) $(datatypes) $(integers)
+lisp/load.input.req: $(srcdir)/Makefile.in
+	for i in $(lisp_subset); do echo $$i; done > $@
+
+lisp/load.input.dep: lisp/load.input.req $(patsubst %, lisp/%.dep,$(lisp_subset))
+	@[ -d $(dir $@) ] || mkdir -p $(dir $@)
+	./build-dep lisp $@.tmp lisp/load.input.req
 	mv $@.tmp $@
 
-load.input: load.input.dep
-	for i in $$(cat load.input.dep); do echo ")r $i" > $@; done
+lisp/runtime.lsp:
+	ar x  /home/pab/Work/aldordist/opt/share/lib/libfoam.al runtime.ao
+	$(ALDOR) -flsp=$@ runtime.ao
+	rm runtime.ao
+
+lisp/load.input: lisp/load.input.dep
+	echo > $@
+	for i in $(filter-out lang, $(shell cat lisp/load.input.dep)); do if [ ! "$$i" = "" ]; then echo ")lib $$i" >> $@; fi; done
+
+#
+# Cleaning
+#
+
+outputs_library = $(native_library) $(lisp_library)
 
 mostlyclean-local:
-	rm -f *.al *.ao *.mk
+	rm -rf $(foreach i, $(outputs_library), $(i).ao $(i).al $(i).mk $(i).dep)
+	rm -rf common native lisp *.al *.ao *.mk *.o *.ap *.dep *.asy *.lsp *.req *.fm *.c
 
 clean-local: mostlyclean-local
+
+#
+# Prebuild tests
+#
 
 allscripts := $(scripts) $(testscripts)
 
@@ -276,3 +415,9 @@ test-build-dep.tested: test-build-dep build-dep
 	./test-build-dep
 	touch $@
 
+#
+# Stupid make tricks
+#
+
+empty:=
+space:= $(empty) $(empty)

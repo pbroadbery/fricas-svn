@@ -1,4 +1,4 @@
---DEPS: SegmentCategory SetCategory SegmentExpansionCategory
+--DEPS: OutputForm SegmentCategory SetCategory SegmentExpansionCategory
 --DEPS: Segment_SegmentCategory List_StreamAggregate
 
 #include "axiom.as"
@@ -7,22 +7,28 @@ import from Boolean;
 import from System;
 import from String;
 
+Xyzzy: with == add;
+
 extend Segment(S:Type): SegmentCategory(S) with {
     if S has SetCategory then SetCategory;
     if S has OrderedRing then SegmentExpansionCategory(S, List S);
 }
 == add {
     import from S;
+    Rep ==> Record(low: S, high: S, incr: Integer);
+    import from Rep;
+
     if S has SetCategory then {
-      coerce(s:%):OutputForm == {
-        seg := SEGMENT(s.low::OutputForm, s.high::OutputForm);
-        s.incr = 1 => seg;
-        infix(" by "::OutputForm, seg, s.incr::OutputForm)}
+      coerce(s:%): OutputForm == {
+        seg: OutputForm := SEGMENT(rep(s).low::OutputForm, rep(s).high::OutputForm);
+        rep(s).incr = 1 => seg;
+        infix(" by "::OutputForm, seg, rep(s).incr::OutputForm)}
 
        (a: %) = (b: %): Boolean == low a = low b and high a = high b;
     }
+
     if S has OrderedRing then {
-      expand(ls: List %):List S == {
+      expand(ls: List %): List S == {
         lr := nil()$List(S);
         for s in ls repeat {
           l := lo s;

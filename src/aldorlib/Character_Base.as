@@ -1,4 +1,4 @@
---DEPS: init_Character Integer SingleInteger runtime/c/Local String
+--DEPS: init_Character Integer SingleInteger runtime/ARCH/Local String
 #include "axiom.as"
 
 #pile
@@ -21,12 +21,12 @@ extend Character: with
 
        local coerce(flg: Bool): Boolean == flg pretend Boolean;
 
-       char(s): % == CHAR_-AT(s, 0)$StringLisp
+       char(s): % == s.0;
 
        (a: %) = (b: %): Boolean == (rep(a) = rep(b))::Boolean;
 
        ord(c): Integer == never;
-       quote(): % == char "'";
+       quote(): % == char "_"";
        space(): % == char " ";
        newline(): % == char " _
 ";

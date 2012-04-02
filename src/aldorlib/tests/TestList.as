@@ -1,15 +1,19 @@
---DEPS: List OutputForm runtime/c/rtexns NonNegativeInteger runtime/c/Local 
+--DEPS: List OutputForm runtime/ARCH/rtexns NonNegativeInteger_OrderedAbelianMonoidSup 
+--DEPS: runtime/ARCH/Local Integer_SetCategory tests/Assert tests/TestCategory
+
 #include "axiom.as"
 
 import from OutputForm;
 import from String;
 
+TestList: TestCategory with {
+}
+== add {
+  local assertTrue(x: Boolean): () == if not x then never;
 
-local assertTrue(x: Boolean): () == if not x then never;
-local assertEquals(n: NonNegativeInteger, n2: NonNegativeInteger): () == if n ~= n2 then never;
-local assertEquals(n: Integer, n2: Integer): () == if n ~= n2 then never;
-
-foo(): () == {
+  test(): () == {
+       import from Assert NonNegativeInteger;
+       import from Assert Integer;
        import from IO;
        import from List Integer;
        import from List OutputForm;
@@ -72,10 +76,38 @@ foo(): () == {
        assertEquals(3, last l);
        l := [1];
        assertEquals(1, last l);
+
+       l := [1,2,3];
+       assertEquals(3, first lastCell l);
+
+       l := [1];
+       assertEquals(1, first lastCell l);
+
+       l := [1,2,3];
+       e: List Integer := [];
+
+       assertEquals(e, concat(e, e));
+       assertEquals([1], concat(e,[1]));
+return;
+       assertEquals([1], concat([1],e));
+
+       assertEquals([1,2], concat([],[1,2]));
+       assertEquals([1,2], concat([1],[2]));
 }
 
+local assertEquals(l1: List Integer, l2: List Integer): () == {
+   import from NonNegativeInteger;
+   import from Integer;
+   print coerce #l1;
+   print coerce #l2;
+   if empty? l1 then if not empty? l2 then never;
+   if empty? l2 then if not empty? l1 then never;
+   if empty? l1 and empty? l2 then return;
+   first l1 ~= first l2 => never;
+   assertEquals(rest l1, rest l2);
+}
 
-foo2(): () == {
+test2(): () == {
        import from List Integer;
        import from Integer;
        assertTrue(empty? reverse empty());
@@ -85,5 +117,7 @@ foo2(): () == {
        assertTrue(reverse reverse l = l);
 }
 
-foo2();
-foo();
+}
+
+--foo2();
+--foo();

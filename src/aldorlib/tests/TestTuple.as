@@ -1,9 +1,11 @@
---DEPS: List OutputForm runtime/c/rtexns Tuple
+--DEPS: List OutputForm runtime/ARCH/rtexns Tuple tests/TestCategory
 #include "axiom.as"
 
 import from OutputForm;
 import from String;
-foo(): () == {
+
+TestTuple: TestCategory with == add {
+test(): () == {
        import from Tuple Integer;
        import from Integer;
        import from SingleInteger;
@@ -20,4 +22,5 @@ mktuple(X: with)(t: Tuple X): Tuple X == t;
 
 assertTrue(b: Boolean): () == if not b then never;
 
-foo();
+}
+

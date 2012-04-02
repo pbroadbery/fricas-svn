@@ -1,25 +1,23 @@
---DEPS:  Integer NonNegativeInteger System String
+--DEPS: PositiveInteger_Base OrderedAbelianSemiGroup 
+--DEPS: Monoid CommutativeStar Integer_EuclideanDomain
 #include "axiom"
 
 import from System;
 import from String;
 import from Boolean;
+#pile
 
-extend PositiveInteger: with {
-    1: %;
-    one?: % -> Boolean;
-    shift: (%, Integer) -> %;
-    -: (%, %) -> Integer;
-    odd?: % -> Boolean;
-    coerce: % -> Integer;
-    coerce: % -> NonNegativeInteger;
-    coerce: NonNegativeInteger -> %;
-} == Integer add {
-    import from NonNegativeInteger;
-    Rep ==> Integer;
-    (a: %) - (b: %): Integer == rep(a) - rep(b);
-    coerce(n: %): NonNegativeInteger == n pretend NonNegativeInteger;
-    coerce(n: NonNegativeInteger): % == { zero? n => error "oops"; per(n::Integer)}
-    coerce(n: %): Integer == rep n;
-    coerce(n: Integer): % == { zero? n => error "oops"; per(n)}
-}
+extend PositiveInteger: Join(OrderedAbelianSemiGroup, Monoid, CommutativeStar) with
+            gcd: (%,%) -> %
+              ++ gcd(a,b) computes the greatest common divisor of two
+              ++ positive integers \spad{a} and b.
+ == add
+  Rep ==> Integer
+  import from Rep
+
+  (=)(a: %, b: %): Boolean == rep(a) = rep(b)
+  coerce(a: %): OutputForm == coerce rep a
+  (+)(a: %, b: %) : % == per(rep(a)+rep(b))
+  (*)(a: %, b: %) : % == per(rep(a)*rep(b))
+  gcd(a: %, b: %) : % == per(gcd(rep(a), rep(b)))
+

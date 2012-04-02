@@ -10,7 +10,15 @@ extend Integer: IntegralDomain with {
 == add {
     import from IdealElt %;
 
+    Rep ==> BInt;
+    import from Machine;
+
+    local coerce(b: Bool): Boolean == b pretend Boolean;
+    (a: %) * (b: %): % == per(rep a * rep b);
+    zero?(x: %): Boolean == (zero? rep x)::Boolean;
+
     characteristic(): NonNegativeInteger == 0;
+
     (exquo)(a: %, b: %): Partial % == {
     	    (q, r) := divide(a, b);
 	    if zero? r then success(q)

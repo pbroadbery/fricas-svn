@@ -10,6 +10,8 @@ Partial(T: Type): with {
     value: % -> T;
     coerce: % -> T;
     if T has BasicType then BasicType;
+
+    export from T;
 } == add {
   Rep ==> Union(success: T, failed: 'failed');
   import from Rep;

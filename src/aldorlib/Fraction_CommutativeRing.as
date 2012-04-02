@@ -48,7 +48,7 @@ extend Fraction(S: IntegralDomain): CommutativeRing with {
 
     coerce(s: S): % == per [s, 1];
 
-    if S has GcdDomain0 then {
+--    if S has GcdDomain0 then {
     x - y: %  == {
         zero? y => x;
         z := per [rep(x).den, rep(y).den];
@@ -69,8 +69,8 @@ extend Fraction(S: IntegralDomain): CommutativeRing with {
         normalize per [rep(x).num * rep(y).num, rep(x).den * rep(y).den]}
 
       local cancelGcd x: S == {
---        one?(x.den) => rep(x).den;
         ((rep(x).den) = 1) => rep(x).den;
+        if S has GcdDomain0 then {
         d := gcd(rep(x).num, rep(x).den);
         xn: Partial S := rep(x).num exquo d;
         failed?(xn) =>
@@ -82,6 +82,7 @@ extend Fraction(S: IntegralDomain): CommutativeRing with {
         rep(x).num := xn :: S;
         rep(x).den := xd :: S;
         d}
+	else return 1}
 
       local normalize y: % == {
         UCA ==> Record(unit:S,canonical:S,associate:S);
@@ -112,5 +113,5 @@ extend Fraction(S: IntegralDomain): CommutativeRing with {
         success(per[rep(x).den, rep(x).num])}
     }
 
-}
+--}
 }

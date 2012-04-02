@@ -1,5 +1,5 @@
 --DEPS: init_OutputForm init_List String Integer Symbol init_DoubleFloat init_NonNegativeInteger
---DEPS: NumberFormats Character_Base OutputFormLisp SetCategory runtime/c/SExpression
+--DEPS: NumberFormats Character_Base OutputFormLisp SetCategory runtime/ARCH/SExpression
 #include "axiom"
 
 #pile

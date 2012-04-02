@@ -1,4 +1,4 @@
---DEPS:  NonNegativeInteger finiteAggregate runtime/c/Local
+--DEPS:  NonNegativeInteger finiteAggregate 
 #include "axiom.as"
 
 import from Boolean;

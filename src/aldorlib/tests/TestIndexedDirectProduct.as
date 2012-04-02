@@ -1,4 +1,5 @@
---DEPS: IndexedDirectProductObject NonNegativeInteger_OrderedAbelianMonoidSup Integer_IntegralDomain
+--DEPS: IndexedDirectProductObject NonNegativeInteger_OrderedAbelianMonoidSup
+--DEPS: Integer_IntegralDomain tests/TestCategory
 #include "axiom.as"
 
 #pile
@@ -9,7 +10,9 @@ import from OutputForm
 import from Integer
 import from NonNegativeInteger
 
-foo():() == 
+TestIndexedDirectProduct: TestCategory with
+== add
+ test():() ==
 	 x := monomial(1,1);
 	 one := monomial(1, 0);
 	 assertTrue(x - x = 0)
@@ -20,8 +23,6 @@ foo():() ==
 	 assertTrue(2*x = x + x)
 	 assertTrue(zero?(x-x))
 	 print((2*x + one)::OutputForm)
-
-foo();
 
 assertTrue(x: Boolean): () == if not x then never;
 

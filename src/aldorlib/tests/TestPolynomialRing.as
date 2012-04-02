@@ -1,4 +1,6 @@
 --DEPS: PolynomialRing NonNegativeInteger_OrderedAbelianMonoidSup
+--DEPS: tests/TestCategory
+
 #include "axiom.as"
 
 #pile
@@ -9,7 +11,9 @@ import from OutputForm
 import from Integer
 import from NonNegativeInteger
 
-foo():() == 
+TestPolynomialRing: TestCategory with
+== add
+  test(): () ==
 	 x := monomial(1,1);
 	 one := monomial(1, 0);
 	 assertTrue(one * one = one)
@@ -24,7 +28,5 @@ foo():() ==
 	 print((2*x + 1)::OutputForm)
 	 print(x::OutputForm)
 	 print(((x+1)*(x+1)*(x+1))::OutputForm)
-
-foo();
 
 assertTrue(x: Boolean): () == if not x then never;

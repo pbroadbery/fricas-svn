@@ -1,4 +1,5 @@
 --DEPS: SparseUnivariatePolynomial_FiniteAbelianMonoidRing
+--DEPS: tests/TestCategory
 #include "axiom.as"
 
 
@@ -10,7 +11,9 @@ import from OutputForm
 import from Integer
 import from NonNegativeInteger
 
-foo():() == 
+TestSUP0: TestCategory with
+== add
+ test():() ==
 	 x := monomial(1,1);
 	 assertTrue(degree x = 1)
 	 assertTrue(x+1 ~= x)
@@ -20,7 +23,5 @@ foo():() ==
 	 assertTrue((x+1)*(x+1) = x*x + 2*x + 1)
 	 print(x::OutputForm)
 	 print(((x+1)*(x+1))::OutputForm)
-
-foo();
 
 assertTrue(x: Boolean): () == if not x then never;

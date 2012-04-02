@@ -1,4 +1,4 @@
---DEPS:  init_List init_Generator NonNegativeInteger SetCategory Tuple runtime/c/Local
+--DEPS:  init_List init_Generator NonNegativeInteger SetCategory Tuple runtime/ARCH/Local
 #include "axiom.as"
 
 import from Boolean;
@@ -52,6 +52,9 @@ extend List(T: Type): with {
   sort: ((T, T) -> Boolean, %) -> %;
 
   =: (%, %) -> Boolean;
+
+  lastCell: % -> %;
+  nil: () -> %;
 
   export from 'first', 'rest'
 }
@@ -115,7 +118,7 @@ extend List(T: Type): with {
        while not empty? x repeat { l := l + 1; x := rest x};
        l;
   }
-  concat(t: T, l2: %): % == never;
+  concat(t: T, l2: %): % == cons(t, l2);
 
   reverse!(x: %): % == {
      empty? x => empty();
@@ -129,7 +132,7 @@ extend List(T: Type): with {
      prev
   }
 
-  local lastCell(x: %): % == {
+  lastCell(x: %): % == {
      empty? x => error "empty list";
      while not empty? rest x repeat x := rest x;
      x
@@ -169,7 +172,10 @@ extend List(T: Type): with {
 
   _select(f:T->Boolean, x:%): % == never;
 
-  concat(l1: %, l2: %): % == never;
+  concat(l1: %, l2: %): % == {
+     concat!(copy l1, l2);
+  }
+
   concat!(l1: %, l2: %): % == {
      empty? l1 => l2;
      theLastCell := lastCell l1;

@@ -1,7 +1,8 @@
 #!/bin/bash
 
-target=$1 
-reqfile=$2
+prefix=$1
+target=$2
+reqfile=$3
 
 #for i in $(cat $reqfile); do
 #   echo $i $(cat $i.dep); 
@@ -18,18 +19,18 @@ missing() {
 }
 
 names=
-for i in $(cat $reqfile)
+for i in $(cat $reqfile | sed -e "s/ARCH/$prefix/")
 do
     if ! $(missing $i "$names");
     then
 	continue
     fi
-    if [ ! -f $i.dep ];
+    if [ ! -f $prefix/$i.dep ];
     then 
-	echo "Missing $i.dep"
+	echo "Missing $prefix/$i.dep"
 	exit 1
     fi
-    for j in $(cat $i.dep);
+    for j in $(cat $prefix/$i.dep);
     do
 	if $(missing $j "$names");
 	then

@@ -1,11 +1,14 @@
 --DEPS: PrimitiveArray Integer NonNegativeInteger_OrderedAbelianMonoidSup
+--DEPS: tests/TestCategory
 #include "axiom.as"
 
 #pile
 
 import from Boolean
 
-foo():() == 
+TestPrimitiveArray: TestCategory
+== add
+ test():() ==
 	 import from PrimitiveArray String
 	 import from NonNegativeInteger
 	 import from String
@@ -18,6 +21,6 @@ foo():() ==
 	 v.0 := "aa";
 	 assertTrue(v.0 = "aa");
 
-foo();
+
 
 assertTrue(x: Boolean): () == if not x then never;

@@ -1,4 +1,5 @@
---DEPS:  SingleInteger init_Character init_Integer runtime/c/LString init_Boolean init_String
+--DEPS: SingleInteger init_Character init_Integer runtime/lisp/LString 
+--DEPS: init_Boolean init_String
 #include "axiom.as"
 
 local LArray(T: Type): with {
@@ -97,32 +98,16 @@ IO: with {
 == add {
    local P: with == add;
    import {
-       fputss: (Bytes, SingleInteger, SingleInteger, P) -> ();
+       fputss: (LString, SingleInteger, SingleInteger, P) -> ();
        fputc: (LCharacter, P) -> ();
        stdoutFile: () -> P;
    } from Foreign C;
    import from LSInteger;
    import from LString;
 
-   print(s: LString): () == fputss(bytes s, 0 pretend SingleInteger, length s, stdoutFile());
+   print(s: LString): () == fputss(s, 0 pretend SingleInteger, length s, stdoutFile());
    print(c: LCharacter): () == fputc(c, stdoutFile());
    print(n: SingleInteger): () == print string(n)
-}
-
-StringLisp: with {
-     CHAR_-AT: (s: String, n: Integer) -> Character;
-     EQUAL: (String, String) -> Boolean;
-}
-== add {
-     Rep ==> LString;
-     import from Rep;
-     import from LSInteger;
-
-     CHAR_-AT(s: String, n: Integer): Character == QENUM(s pretend LString, 
-     		 	    	      		   	 n::LSInteger pretend SingleInteger);
-
-     EQUAL(a: String, b: String): Boolean == never;
-     
 }
 
 ListLisp(T: Type): with {
@@ -136,16 +121,29 @@ ListLisp(T: Type): with {
    RPLACD: (%, %) -> ();
 }
 == add {
-	Rep ==> LPair T;
-        import from Rep;
-	
-	CONS(t: T, x: %): % == per cons(t, rep x);
-	CAR(x: %): T == car rep(x);
-	CDR(x: %): % == per cdr rep(x);
-        NIL(): % == per nil();
-	NULL(x: %): Boolean == nil? rep x;
-        RPLACA(x: %, t: T): () == setcar!(rep x, t);
-        RPLACD(x: %, r: %): () == setcdr!(rep x, rep r);
+   import from Machine;
+   Rep ==> Ptr$Machine;
+   local trep(t: T): Rep == t pretend Rep;
+   local tper(r: Rep): T == r pretend T;
+
+   import {
+      CONS: (Rep, Rep) -> Rep;
+      CAR: Rep -> Rep;
+      CDR: Rep -> Rep;
+      NULL: Rep -> Boolean;
+
+      RPLACA: (Rep, Rep) -> ();
+      RPLACD: (Rep, Rep) -> ();
+   } from Foreign Lisp;
+
+   CONS(t: T, b: %): % == per CONS(trep t, rep b);
+   CAR(a: %): T == tper CAR(rep a);
+   CDR(a: %): % == per CDR(rep a);
+   NIL(): % == per nil;
+   NULL(a: %): Boolean == NULL rep a;
+
+   RPLACA(a: %, t: T): () == RPLACA(rep a, trep t);
+   RPLACD(a: %, b: %): () == RPLACD(rep a, rep b);
 }
 
 ArrayLisp(T: Type): with {
@@ -174,31 +172,4 @@ ArrayLisp(T: Type): with {
 }
 
 
-LPair(T: Type): with {
-      cons: (T, %) -> %;
-      car: % -> T;
-      cdr: % -> %;
-      setcar!: (%, T) -> ();
-      setcdr!: (%, %) -> ();
-      nil?: % -> Boolean;
-      nil: () -> %;
-} 
-== add {
-  Rep ==> Record(car: T, cdr: %);
-  import from Rep;
-  import from Machine;
-
-  prep(a: %): Ptr$Machine == (a pretend Ptr$Machine);
-
-  nil?(p: %): Boolean == nil?(p pretend Ptr$Machine) pretend Boolean;
-  nil(): % == nil$Machine pretend %;
-
-  cons(a: T, b: %): % == per [a, b];
-
-  car(p: %): T == rep(p).car;
-  cdr(p: %): % == rep(p).cdr;
-  
-  setcar!(p: %, v: T): () == rep(p).car := v;
-  setcdr!(p: %, v: %): () == rep(p).cdr := v;
-}
 

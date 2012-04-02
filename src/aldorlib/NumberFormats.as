@@ -1,4 +1,4 @@
---DEPS: PositiveInteger Integer Character_Base init_Float String PrimitiveArray_Base Partial List
+--DEPS: PositiveInteger_Base Integer Character_Base init_Float String PrimitiveArray_Base Partial List
 --DEPS: init_Symbol
 
 #include "axiom.as"
