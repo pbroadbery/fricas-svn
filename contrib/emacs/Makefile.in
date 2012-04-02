@@ -1,4 +1,4 @@
-
+subdir=contrib/emacs/
 default: efricas fricas-cpl.el
 
 clean:
