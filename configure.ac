@@ -835,7 +835,7 @@ AC_SUBST(BUILD_ALDOR_INTERFACE)
 
 if test x"$BUILD_ALDOR_INTERFACE" = xyes ; then
   AC_MSG_NOTICE([Aldor interface will be built.])
-  fricas_src_subdirs="$fricas_src_subdirs aldor"
+  fricas_src_subdirs="$fricas_src_subdirs aldorlib aldor"
   fricas_src_all="$fricas_src_all all-aldor"
 else
   AC_MSG_WARN([Aldor interface will not be built.])
@@ -843,6 +843,7 @@ fi
 FRICAS_MAKEFILE([src/aldor/Makefile])
 FRICAS_MAKEFILE([src/aldor/Makefile2])
 FRICAS_MAKEFILE([src/aldor/Makefile3])
+FRICAS_MAKEFILE([src/aldorlib/Makefile])
 ###################################################################
 
 
