@@ -64,3 +64,8 @@ ao/%.ao: ap/%.ap al/libaxiom_%.al ao/.dir
 	mkdir -p $(patsubst %/.dir,%,$@)
 	touch -t 199901010000 $@
 
+.PRECIOUS: Makefile2
+Makefile2: $(srcdir)/Makefile2.in 
+	  $(top_srcdir)/config/setup-dep.mk \
+	  $(abs_top_builddir)/config.status
+	cd $(abs_top_builddir) && $(SHELL) ./config.status $(subdir)$@
