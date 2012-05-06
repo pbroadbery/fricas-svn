@@ -1,8 +1,13 @@
+--DEPS:  init_Equation
 #include "axiom.as"
 
 import from Boolean;
 
 extend Equation(R: SetCategory): with {
+   if S has SetCategory then {
+      SetCategory
+      CoercibleTo Boolean
+   }
    =: (R, R) -> %;
 }
 == add {

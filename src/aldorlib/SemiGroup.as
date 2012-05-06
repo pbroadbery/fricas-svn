@@ -1,3 +1,4 @@
+--DEPS:  SetCategory PositiveInteger RepeatedSquaring
 #include "axiom.as"
 
 import from Boolean;

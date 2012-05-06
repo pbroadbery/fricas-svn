@@ -1,3 +1,4 @@
+--DEPS:  SetCategory  init_PositiveInteger RepeatedDoubling
 #include "axiom.as"
 
 import from Boolean;

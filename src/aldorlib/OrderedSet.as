@@ -1,3 +1,4 @@
+--DEPS:  Comparable PartialOrder 
 #include "axiom"
 
 import from Boolean;

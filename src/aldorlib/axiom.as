@@ -1,7 +1,7 @@
 #library Axiom "axiom"
 
-import from Axiom;
-inline from Axiom;
+import from AxiomLib;
+inline from AxiomLib;
 
 macro {
         rep x == x @ % pretend Rep;

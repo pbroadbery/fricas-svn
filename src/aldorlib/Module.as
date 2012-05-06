@@ -1,3 +1,4 @@
+--DEPS:  BiModule CommutativeRing
 #include "axiom"
 
 import from Boolean;

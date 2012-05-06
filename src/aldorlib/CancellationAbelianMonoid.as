@@ -1,3 +1,4 @@
+--DEPS:  AbelianMonoid Partial
 #include "axiom.as"
 
 import from Boolean;

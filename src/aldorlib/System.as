@@ -1,3 +1,4 @@
+--DEPS:  lang init_String init_Boolean 
 #include "axiom"
 
 import from Boolean;

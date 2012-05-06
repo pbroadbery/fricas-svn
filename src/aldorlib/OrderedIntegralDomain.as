@@ -1,3 +1,4 @@
+--DEPS:  OrderedRing IntegralDomain
 #include "axiom"
 
 import from Boolean;

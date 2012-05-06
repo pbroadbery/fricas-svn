@@ -1,3 +1,4 @@
+--DEPS:  EntireRing canonicalUnitNormal Algebra
 #include "axiom"
 
 import from Boolean;
@@ -44,8 +45,8 @@ default {
          associates?(x,y): Boolean == {
            zero? x => zero? y;
            zero? y => false;
-           failed?(exquo(x, y)) => false;
-           failed?(exquo(y, x)) => false;
+           failed?(x exquo y) => false;
+           failed?(y exquo x) => false;
            true
 	}
        }

@@ -1,3 +1,4 @@
+--DEPS:  LeftModule RightModule 
 #include "axiom"
 
 import from Boolean;

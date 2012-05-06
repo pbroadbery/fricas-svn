@@ -1,3 +1,4 @@
+--DEPS:  NonNegativeInteger finiteAggregate XLisp
 #include "axiom.as"
 
 import from Boolean;

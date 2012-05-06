@@ -1,4 +1,7 @@
+--DEPS:  SetCategory List
 #include "axiom.as"
+
+import from Boolean;
 
 InnerEvalable(A:SetCategory, B:Type): Category == SetCategory with {
     eval: (%, A, B) -> %;

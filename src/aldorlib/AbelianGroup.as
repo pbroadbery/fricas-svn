@@ -1,3 +1,4 @@
+--DEPS:  CancellationAbelianMonoid 
 #include "axiom.as"
 
 import from Boolean;

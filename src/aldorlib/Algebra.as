@@ -1,3 +1,4 @@
+--DEPS:  CommutativeRing Module
 #include "axiom"
 
 import from Boolean;
@@ -8,6 +9,6 @@ Algebra(X:CommutativeRing): Category ==
       coerce: X -> %;
           ++ coerce(r) maps the ring element r to a member of the algebra.
  default {
-  coerce(x:X):% == { f: (X,%) -> % := *; f(x,1)}
+  coerce(x:X):% == { x * 1}--f: (X,%) -> % := *; f(x,1)}
 }
 }

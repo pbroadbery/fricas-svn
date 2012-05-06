@@ -1,8 +1,13 @@
+--DEPS:  IntegralDomain List System
 #include "axiom.as"
 
 import from System;
 import from String;
 import from Boolean;
+
+-- This is the Axiom code, but without any references to
+-- polynomials. They're not an essential part of the category, and we
+-- can fill them in at a later stage
        
 GcdDomain0: Category == IntegralDomain with {
     --operations
@@ -23,12 +28,11 @@ GcdDomain0: Category == IntegralDomain with {
       lcm(x: %,y: %): % == {
         y = 0 => 0;
         x = 0 => 0;
-        LCM : Partial(%) := exquo(y, gcd(x,y));
+        LCM : Partial(%) := y exquo gcd(x,y);
         success? LCM =>  x * value(LCM);
         error "bad gcd in lcm computation"
       }
       lcm(l:List %): % == reduce(lcm,l,1,0);
       gcd(l:List %): % == reduce(gcd,l,0,1);
-      SUP ==> SparseUnivariatePolynomial;
 }
 }

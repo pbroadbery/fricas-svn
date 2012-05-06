@@ -1,3 +1,4 @@
+--DEPS:  AbelianSemiGroup SemiGroup
 
 #include "axiom.as"
 

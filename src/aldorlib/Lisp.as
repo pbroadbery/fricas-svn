@@ -5,22 +5,22 @@ XLisp: with {
   EQ: (%, %) -> Boolean
 } == add {
   import {
-       cons: (%, %) -> %;
-       car: % -> %;
-       cdr: % -> %;
-       nil: %;
-       eq: (%, %) -> Boolean;
-       null: % -> Boolean;
+       cons: (LL, LL) -> LL;
+       car: LL -> LL;
+       cdr: LL -> LL;
+       nil: LL;
+       eq: (LL, LL) -> Boolean;
+       null: LL -> Boolean;
   } from Foreign Lisp;
+  Rep==>LL
 
   default l, x, y: %;
-  lisp(T: with)(t: T): % == t pretend %;
 
-  CONS(x, l): % == CONS(x, l);
-  CAR(l): % == car(l);
-  CDR(l): % == cdr(l);
-  null?(x): Boolean == null(x);
-  EQ(x, y): Boolean == EQ(x, y);
+  CONS(x, l): % == CONS(rep x, repl);
+  CAR(l): % == per car(rep l);
+  CDR(l): % == per cdr(rep l);
+  null?(x): Boolean == null(rep x);
+  EQ(x, y): Boolean == eq(rep x, rep y);
 
 }
 

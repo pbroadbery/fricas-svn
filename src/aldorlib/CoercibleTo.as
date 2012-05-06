@@ -1,3 +1,4 @@
+--DEPS:  lang
 #include "axiom"
 
 CoercibleTo(S:with): Category == with {

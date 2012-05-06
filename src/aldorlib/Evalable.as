@@ -1,4 +1,7 @@
+--DEPS:  InnerEvalable Equation_SetCategory
 #include "axiom.as"
+
+import from Boolean;
 
 Evalable(R:SetCategory): Category == InnerEvalable(R,R) with {
     eval: (%, Equation R) -> %;

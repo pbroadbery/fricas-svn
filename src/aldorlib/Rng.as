@@ -1,3 +1,4 @@
+--DEPS:  AbelianGroup NonNegativeInteger
 #include "axiom.as"
 
 import from Boolean;

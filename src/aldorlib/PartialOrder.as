@@ -1,3 +1,4 @@
+--DEPS:  init_Boolean
 #include "axiom"
 
 import from Boolean;

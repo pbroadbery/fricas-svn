@@ -1,3 +1,4 @@
+--DEPS:  BasicType CoercibleTo init_OutputForm String init_SingleInteger
 
 #include "axiom"
 
@@ -9,5 +10,5 @@ SetCategory: Category == Join(BasicType,CoercibleTo OutputForm) with {
   default {
       hash(s : %):  SingleInteger == 0$SingleInteger;
       latex(s : %): String       == "\mbox{\bf Unimplemented}"
-}
+  }
 }

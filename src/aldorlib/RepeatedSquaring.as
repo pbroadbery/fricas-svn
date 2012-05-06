@@ -1,3 +1,4 @@
+--DEPS:  lang SetCategory PositiveInteger SetCategory Integer
 #include "axiom"
 
 import from Boolean;

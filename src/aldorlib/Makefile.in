@@ -7,149 +7,233 @@ VPATH=@srcdir@
 MAKEFLAGS += -Wwarn-undefined-variables
 ALDOR=@ALDOR@
 
-lang := lang init_Generator
-environment := System init_XLisp XLisp
-attributes := unitsKnown noZeroDivisors CommutativeStar	\
-	      canonicalUnitNormal finiteAggregate shallowlyMutable
+scripts := build-dep show gloop
+testscripts := test-build-dep
 
-basics := PositiveInteger CoercibleTo RepeatedDoubling SetCategory	\
-	   init_SingleInteger init_OutputForm OutputForm init_String	\
-	   BasicType init_Boolean String Integer NonNegativeInteger	\
-	   RepeatedSquaring init_NonNegativeInteger			\
-	   init_PositiveInteger AbelianGroup				\
-	   CancellationAbelianMonoid AbelianMonoid AbelianSemiGroup	\
-	   Ring Rng SemiRng SemiGroup SemiRing Monoid LeftModule	\
-	   Partial Boolean RightModule BiModule Module			\
-	   CommutativeRing EntireRing Algebra 
+lang := lang init_Generator Void Tuple Basic 
+environment := System init_XLisp XLisp
+
+attributes := unitsKnown noZeroDivisors CommutativeStar			\
+	      canonicalUnitNormal finiteAggregate shallowlyMutable	\
+	      CharacteristicNonZero CharacteristicZero Approximate	\
+	      additiveValuation
+
+integers := init_NonNegativeInteger init_PositiveInteger		\
+	    init_SingleInteger PositiveInteger Integer			\
+	    NonNegativeInteger Integer_SetCategory			\
+	    Integer_OrderedRing Integer_IntegralDomain IntegerMod	\
+	    SingleInteger NonNegativeInteger_OrderedAbelianMonoidSup 
+
+basics := CoercibleTo FullyRetractableTo RetractableTo ConvertibleTo	\
+          SetCategory init_String BasicType OrderedFinite		\
+          init_Boolean String init_InputForm RepeatedDoubling		\
+          RepeatedSquaring init_Symbol Symbol Symbol_SetCategory	\
+          init_Character Character_Base Logic Character			\
+          String_SetCategory
+
+outputs := init_OutputForm OutputForm NumberFormats	\
+	   OutputFormLisp
+
+maths := AbelianGroup CancellationAbelianMonoid AbelianMonoid		\
+         AbelianSemiGroup Group Ring Rng SemiRng SemiGroup SemiRing	\
+         Monoid LeftModule Partial Boolean RightModule BiModule		\
+         Module CommutativeRing EntireRing Algebra DifferentialRing	\
+         DifferentialExtension PartialDifferentialRing Field0		\
+         StepThrough Finite FullyLinearlyExplicitRingOver		\
+         LinearlyExplicitRingOver 
+
+domains := PrincipalIdealDomain0 PrincipalIdealDomain GcdDomain0	\
+           GcdDomain IntegralDomain EuclideanDomain0 EuclideanDomain	\
+           IdealElt
+
+floats := init_DoubleFloat init_Float DoubleFloat_SetCategory
+
+_sexprs := init_SExpression SExpressionCategory SExpressionOf SExpression
+sexprs  := $(patsubst %, sexpr/%, $(_sexprs))
+
+fractions := Localize init_Fraction DivisionRing LocalAlgebra	\
+	     Fraction_CommutativeRing Fraction_DivisionRing
+
+factoreds := init_Factored
+
+randoms := RandomNumberGenerator RandomNumberSource
+
+poly := PolynomialRing FiniteAbelianMonoidRing AbelianMonoidRing	\
+	SingletonAsOrderedSet FreeModule AbelianProductCategory		\
+	IndexedDirectProductCategory IndexedDirectProductObject		\
+	FreeModuleCategory UnivariatePolynomialCategory0		\
+	SparseUnivariatePolynomial_FiniteAbelianMonoidRing		\
+	PolynomialCategory0 init_SparseUnivariatePolynomial		\
+	SparseUnivariatePolynomial_UnivariatePolynomialCategory0	\
+	PseudoRemainderSequence UnivariatePolynomialCategory		\
+	PolynomialCategory SparseUnivariatePolynomial_R			\
+	SparseUnivariatePolynomial_UnivariatePolynomialCategory
 
 orders := PartialOrder OrderedSet Comparable OrderedAbelianGroup	\
 	  OrderedAbelianMonoid OrderedAbelianSemiGroup			\
 	  OrderedCancellationAbelianMonoid OrderedIntegralDomain	\
-	  OrderedRing 
+	  OrderedRing OrderedAbelianMonoidSup
 
-datatypes := init_List Aggregate HomogeneousAggregate List Fold
+datatypes := init_List Aggregate HomogeneousAggregate List Fold		\
+	     RecursiveAggregate UnaryRecursiveAggregate			\
+	     LinearAggregate StreamAggregate Collection			\
+	     IndexedAggregate EltableAggregate Eltable			\
+	     List_StreamAggregate FiniteLinearAggregate			\
+	     FiniteLinearAggregateSort IndexedOneDimensionalArray	\
+	     ExtensibleLinearAggregate List_ExtensibleLinearAggregate	\
+	     BitAggregate IndexedBits
 
-equations := Evalable InnerEvalable Equation init_Equation
+segments := init_UniversalSegment init_Segment SegmentCategory	\
+	    SegmentExpansionCategory UniversalSegment		\
+	    Segment_SegmentCategory Segment
 
-domains := PrincipalIdealDomain0 GcdDomain0 IntegralDomain
+equations := Evalable InnerEvalable Equation_SetCategory	\
+	     init_Equation
 
-library := $(lang) $(attributes)  $(environment)  $(basics) $(datatypes) $(orders) $(domains) $(equations)
+trig := RadicalCategory
 
-lang_deps :=
-init_Generator_deps := lang
+arrays := init_PrimitiveArray PrimitiveArray_Base PrimitiveArray	\
+	  InnerIndexedTwoDimensionalArray				\
+	  OneDimensionalArrayAggregate TwoDimensionalArrayCategory \
 
-System_deps := lang String init_Boolean
-XLisp_deps := lang init_Boolean init_XLisp
-init_XLisp_deps := lang
+linalg := init_Vector init_Matrix Matrix_TwoDimensionalArrayCategory	\
+	   Vector_FiniteLinearAggregate VectorCategory			\
+	   IndexedVector_FiniteLinearAggregate IndexedVector Vector	\
+	   MatrixCategory Matrix_MatrixCategory
 
-init_List_deps := BasicType
-List_deps := init_List XLisp init_Generator NonNegativeInteger SetCategory
+axioms := axioms/Stream axioms/RandomGenerator axioms/AxiomEnv	\
+	  axioms/Axiom axioms/AxiomConstructorPackage
 
-RngTest_deps := lang init_Boolean Integer AbelianSemiGroup AbelianMonoid CancellationAbelianMonoid 
-Boolean_deps := init_Boolean BasicType XLisp
-Partial_deps := BasicType Boolean
-SetCategory_deps := BasicType CoercibleTo init_OutputForm String init_SingleInteger
-SemiGroup_deps := SetCategory PositiveInteger RepeatedSquaring
-AbelianSemiGroup_deps := SetCategory  init_PositiveInteger RepeatedDoubling
-SemiRng_deps := AbelianSemiGroup SemiGroup
-SemiRing_deps := SemiRng AbelianMonoid Monoid
-Monoid_deps := SemiGroup NonNegativeInteger Partial
-AbelianMonoid_deps := AbelianSemiGroup NonNegativeInteger PositiveInteger
-CancellationAbelianMonoid_deps := AbelianMonoid Partial
-AbelianGroup_deps := CancellationAbelianMonoid 
-Rng_deps := AbelianGroup NonNegativeInteger
+tests := tests/Test0
 
-IntegralDomain_deps := EntireRing canonicalUnitNormal Algebra
-GcdDomain0_deps := IntegralDomain List System
-PrincipalIdealDomain0_deps := GcdDomain0 init_List Partial
+library := $(lang) $(sexprs) $(outputs) $(randoms) $(axioms)		\
+	   $(arrays) $(tests) $(datatypes) $(linalg) $(trig)		\
+	   $(factoreds) $(poly) $(integers)$(floats) $(fractions)	\
+	   $(maths) $(attributes) $(environment) $(basics)		\
+	   $(segments) $(orders) $(domains) $(equations)
 
-Comparable_deps := SetCategory
-PartialOrder_deps := init_Boolean
-OrderedSet_deps := Comparable PartialOrder 
-OrderedAbelianGroup_deps := OrderedCancellationAbelianMonoid AbelianGroup
-OrderedAbelianMonoid_deps := OrderedAbelianSemiGroup AbelianMonoid
-OrderedAbelianSemiGroup_deps := OrderedSet AbelianSemiGroup
-OrderedCancellationAbelianMonoid_deps := OrderedAbelianMonoid CancellationAbelianMonoid
-OrderedRing_deps := OrderedAbelianGroup Ring System
-OrderedIntegralDomain_deps := OrderedRing IntegralDomain
+opts_UPC := -WD+tipBup -WD+tfs -WD+ablog -WD+tipTdn -Mpreview 
 
-CommutativeRing_deps := Ring CommutativeStar BiModule
-EntireRing_deps := BiModule Ring noZeroDivisors
-
-LeftModule_deps := SemiRng AbelianSemiGroup AbelianMonoid AbelianGroup
-RightModule_deps := SemiRng AbelianSemiGroup AbelianMonoid AbelianGroup
-BiModule_deps := LeftModule RightModule 
-Module_deps := BiModule CommutativeRing
-
-Ring_deps := Rng SemiRing LeftModule unitsKnown NonNegativeInteger Integer
-Algebra_deps := CommutativeRing Module
-RepeatedDoubling_deps := lang SetCategory PositiveInteger SetCategory Integer
-RepeatedSquaring_deps := lang SetCategory PositiveInteger SetCategory Integer
-CoercibleTo_deps := lang
-String_deps := init_String
-init_OutputForm_deps := lang
-init_SingleInteger_deps := lang init_XLisp
-init_String_deps := lang
-init_Boolean_deps := lang
-init_NonNegativeInteger_deps := lang
-init_PositiveInteger_deps := lang
-BasicType_deps := lang init_Boolean
-PositiveInteger_deps := Integer NonNegativeInteger
-NonNegativeInteger_deps := Integer
-Integer_deps := lang init_Boolean init_NonNegativeInteger init_PositiveInteger
-OutputForm_deps := init_OutputForm init_List
-
-Fold_deps := List
-Aggregate_deps := NonNegativeInteger finiteAggregate XLisp
-HomogeneousAggregate_deps := Aggregate CoercibleTo OutputForm	\
-			     SetCategory shallowlyMutable Evalable Boolean Fold
-
-init_Equation_deps := SetCategory
-Equation_deps := init_Equation
-Evalable_deps := InnerEvalable Equation
-InnerEvalable_deps := SetCategory List
-
-unitsKnown_deps := lang
-noZeroDivisors_deps := lang
-CommutativeStar_deps := lang
-canonicalUnitNormal_deps := lang
-finiteAggregate_deps := lang
-shallowlyMutable_deps := lang
-
-default: compile_fmfiles
-
+reqfiles := $(patsubst %,%.req,$(library))
+depfiles := $(patsubst %,%.dep,$(library))
 aofiles := $(patsubst %,%.ao,$(library))
 fmfiles := $(patsubst %,%.fm,$(library))
+
+all: run-all-tests compile_aofiles
 
 compile_aofiles: $(aofiles) 
 compile_fmfiles: $(fmfiles) 
 
-$(aofiles): %.ao: $(srcdir)/%.as %.dep
-	rm -f libaxiom_$*.al
-	for i in $$(cat $*.dep); \
-	do \
-		ar r libaxiom_$*.al $$i.ao; \
-	done
-	$(ALDOR) -I$(srcdir) -Y. -lAxiom=axiom_$* $(opts_$*) -fao=$@ -O $(srcdir)/$*.as
+$(depfiles): %.dep: $(srcdir)/%.as
 
-$(fmfiles): %.fm: %.ao
-	$(ALDOR) -ffm=$@ $*.ao
+$(patsubst %,%.mk,$(library)): %.mk: $(srcdir)/%.as
+	@echo MK $@
+	@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
+	@echo > $@.tmp
+	@for i in $$(cat $(srcdir)/$*.as | sed -n -e '/^--DEPS:/s/^--DEPS://p'); \
+	 do \
+	 	echo "$*.dep: $$i.dep" >> $@.tmp;     \
+	 	echo "$*.ao: $$i.ao" >> $@.tmp;       \
+	 	echo "gloop-$*: $$i.ao" >> $@.tmp;    \
+	 done;  \
+	 mv $@.tmp $@
 
-define dep_template
-$(1).ao: $(1).dep $$(patsubst %,%.ao,$$($(1)_deps))
-$(1).dep: $$(patsubst %,%.dep,$$($(1)_deps))
+$(reqfiles): %.req: $(srcdir)/%.as 
+	@echo REQ $@
+	@echo > $@
+	@for i in $$(cat $(srcdir)/$*.as | sed -n -e '/^--DEPS:/s/^--DEPS://p'); \
+	 do echo "$$i" >> $@; done
+
+-include $(patsubst %,%.mk,$(library))
+
+C_ :=
+C_L := -WD+lib -WD+symeFill
+C_T := -Mpreview -WD+tipBup
+
+define aldor
+$(ALDOR) -fap=$*.ap -I$(srcdir) -Y$(dir $*) \
+	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(opts_$*) -fasy -fao=$@ -O $(srcdir)/$*.as
 endef
 
-$(patsubst %, %.dep,$(library) ): Makefile
+$(aofiles): %.ao: $(srcdir)/%.as %.dep
+	@$(call build-ignoring, %.dep, $?, \
+		echo AO $@; \
+		rm -f $(dir $@)/libaxiom_$(notdir $*).al; \
+		for i in $$(cat $*.dep); \
+		do \
+			ar r $(dir $*)libaxiom_$(notdir $*).al $$i.ao; \
+		done;\
+		$(aldor))
 
-$(patsubst %, %.dep,$(library) ): 
-	echo > $@
-	set -x
-	for i in $(filter %.dep, $^); \
-	do d=$$(basename $$i .dep); \
-	   for j in $$(cat $$i); do grep "^$$j$$" $@ || echo $$j >> $@; done; \
-	echo $(basename $$d .dep)>> $@;  \
-	done
-	cat $@ | awk '{print "item", $$0}'
+$(patsubst %, %.cmd, $(library)): %.cmd:
+	@echo $(aldor)
 
-$(foreach l,$(library), $(eval $(call dep_template,$(l))))
+define build-ignoring 
+	$(if $(filter-out $(1), $(2)), $(3), echo "Ignoring changes to $(2)")
+endef
+
+$(patsubst %, %.fm, $(library)): %.fm: %.ao
+	$(ALDOR) -ffm=$@ $*.ao
+
+$(patsubst %, %.c, $(library)): %.c: %.ao
+	$(ALDOR) -fc=$@ $*.ao
+
+$(patsubst %, %.lsp, $(library)): %.lsp: %.ao
+	$(ALDOR) -flsp=$@ $*.ao
+
+$(patsubst %, %.dep,$(library) ): build-dep
+$(patsubst %, %.dep,$(library) ): %.dep: %.req
+	@echo DEP $@
+	@./build-dep $@.tmp $*.req
+	@mv $@.tmp $@
+
+$(patsubst %, %.dep-old,$(library) ): %.dep-old: %.req
+	@echo DEP $@
+	@echo > $@.tmp
+	@for i in $$(cat $*.req); \
+	 do d=$$(basename $$i .dep); \
+	   for j in $$(cat $$i.dep); do grep -q "^$$j$$" $@.tmp || echo $$j >> $@.tmp; done; \
+	 echo $(basename $$d .dep)>> $@.tmp;  \
+	 done;\
+	 mv $@.tmp $@
+
+$(patsubst %, show-%, $(library)): show
+$(patsubst %, show-%, $(library)): show-%: %.ao
+	aldor="$(ALDOR)" srcdir=$(srcdir) ./show $*
+
+$(patsubst %, gloop-%, $(library)): gloop
+$(patsubst %, gloop-%, $(library)): gloop-%: 
+	aldor="$(ALDOR)" srcdir=$(srcdir) ./gloop $*
+
+blacklist := tests/Test0
+axiom-library: $(foreach elt,$(filter-out $(blacklist), $(library)), $(elt).lsp)
+
+load.input.req: Makefile
+	for i in $(library); do echo $$i; done > $@
+
+load.input.dep: load.input.req $(patsubst %,%.dep,$(library))
+	./build-dep $@.tmp load.input.req
+	mv $@.tmp $@
+
+load.input: load.input.dep
+	for i in $$(cat load.input.dep); do echo ")r $i" > $@; done
+
+mostlyclean-local:
+	rm -f *.al *.ao *.mk
+
+clean-local: mostlyclean-local
+
+allscripts := $(scripts) $(testscripts)
+
+$(allscripts): %: $(srcdir)/%.sh
+	cp $(srcdir)/$*.sh $@
+	chmod a+x $@
+
+run-all-tests: $(patsubst %,%.tested,$(testscripts))
+
+all-build-tests: test-build-dep.tested
+
+test-build-dep.tested: test-build-dep build-dep
+	./test-build-dep
+	touch $@
+

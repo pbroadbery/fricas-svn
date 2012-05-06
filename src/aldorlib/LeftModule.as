@@ -1,3 +1,4 @@
+--DEPS:  SemiRng AbelianSemiGroup AbelianMonoid AbelianGroup
 #include "axiom.as"
 
 import from Boolean;

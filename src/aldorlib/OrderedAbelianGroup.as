@@ -1,3 +1,4 @@
+--DEPS:  OrderedCancellationAbelianMonoid AbelianGroup
 #include "axiom"
 
 import from Boolean;

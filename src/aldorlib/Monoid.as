@@ -1,3 +1,4 @@
+--DEPS:  SemiGroup NonNegativeInteger Partial
 #include "axiom.as"
 
 import from Boolean;
@@ -5,7 +6,7 @@ import from Boolean;
 Monoid: Category == SemiGroup with {
     --operations
       1: %;                   ++ 1 is the multiplicative identity.
-      sample: %;               ++ sample yields a value of type %
+      sample: () -> %;               ++ sample yields a value of type %
       one?: % -> Boolean;                  ++ one?(x) tests if x is equal to 1.
       ^: (%,NonNegativeInteger) -> %;
           ++ x^n returns the repeated product

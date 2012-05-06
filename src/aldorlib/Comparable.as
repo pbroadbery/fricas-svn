@@ -1,3 +1,4 @@
+--DEPS:  SetCategory
 #include "axiom.as"
 
 Comparable: Category == SetCategory with {

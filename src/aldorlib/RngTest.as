@@ -1,3 +1,4 @@
+--DEPS:  lang init_Boolean Integer AbelianSemiGroup AbelianMonoid CancellationAbelianMonoid 
 #include "axiom.as"
 
 import from Boolean;

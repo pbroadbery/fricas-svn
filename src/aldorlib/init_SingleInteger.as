@@ -1,3 +1,4 @@
+--DEPS:  lang init_XLisp
 #include "axiom.as"
 
 import {

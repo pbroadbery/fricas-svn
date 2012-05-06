@@ -1,3 +1,4 @@
+--DEPS:  OrderedAbelianSemiGroup AbelianMonoid
 #include "axiom.as"
 
 

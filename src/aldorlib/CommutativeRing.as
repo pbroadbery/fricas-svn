@@ -1,3 +1,4 @@
+--DEPS:  Ring CommutativeStar BiModule
 #include "axiom.as"
 
 import from Boolean;

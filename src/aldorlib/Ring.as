@@ -1,3 +1,4 @@
+--DEPS:  Rng SemiRing LeftModule unitsKnown NonNegativeInteger Integer
 #include "axiom.as"
 
 import from Boolean;

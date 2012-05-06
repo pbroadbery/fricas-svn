@@ -1,3 +1,5 @@
+--DEPS: Aggregate CoercibleTo OutputForm	
+--DEPS: SetCategory shallowlyMutable Evalable Boolean Fold
 #include "axiom.as"
 
 import from Boolean;
@@ -66,7 +68,7 @@ HomogeneousAggregate(S:Type): Category == Aggregate with {
        for x in parts c | not f x repeat return false;
        true}
      count(f:S -> Boolean, c:%): NonNegativeInteger == {
-             import from Fold(NonNegativeInteger, 0);
+             import from Fold(NonNegativeInteger);
 	     import from List NonNegativeInteger;
 	     import from NonNegativeInteger;
 	     _+/[1 for x in parts c | f x];
