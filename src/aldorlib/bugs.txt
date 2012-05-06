@@ -1,0 +1,23 @@
+* Inlining of symbols in extendedEuclidean in Integer
+
+* ALDORROOT-autoconfig/unicl interaction [PROBABLY DONE]
+
+* Scobinding of:
+  default Str, Sym, Int, Flt, Expr: SetCategory
+  SExpressionOf(Str, Sym, Int, Flt, Expr): Decl == Body where
+    default a: XXX
+    Decl ==> SExpressionCategory(Str, Sym, Int, Flt, Expr)
+    Body ==> add
+  default should be allowed in the "Where" clause  
+
+* Inlining (or not) of IdealElt
+
+* 0.. in error messages appears as ..(0)
+
+* 'for (free a, local b) in foo()' should be supported.
+  Syntax does not support it at the moment, which is unfortunate
+
+* Enumerations should support 'case'
+
+* See 'x/PFE.as'.  Basically '%' in categories isn't bound
+  to the 'right' thing.
