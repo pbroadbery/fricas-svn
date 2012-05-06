@@ -1,4 +1,4 @@
---DEPS:  BasicType Boolean System String
+--DEPS:  BasicType Boolean System String Union
 #include "axiom"
 
 import from System;

@@ -3,14 +3,14 @@
 
 subdir=src/aldorlib/
 srcdir=@srcdir@
-VPATH=@srcdir@
 MAKEFLAGS += -Wwarn-undefined-variables
 ALDOR=@ALDOR@
 
-scripts := build-dep show
+scripts := build-dep
 testscripts := test-build-dep
 
-lang := lang init_Generator Void Tuple Basic
+generated = lang
+lowlevel := init_Generator Union Void Tuple Basic
 environment := System
 
 attributes := unitsKnown noZeroDivisors CommutativeStar			\
@@ -151,30 +151,39 @@ tests := tests/TestOutputForm tests/TestSExpression tests/TestInt	\
 	 tests/TestPseudoRemainderSequence tests/TestPolynomialRing	\
 	 tests/TestSUP0 tests/TestP0
 
-runtime_native := runtime/native/Local runtime/native/rtexns	\
-		runtime/native/LString runtime/native/SExpression
-
-other := GaussianInteger
+runtime_native := runtime/native/Local runtime/native/rtexns		\
+		  runtime/native/LString runtime/native/SExpression
 
 runtime_lisp := runtime/lisp/Local runtime/lisp/rtexns runtime/lisp/LString	\
 		runtime/lisp/SExpression
 
-library := $(lang) $(other) $(sexprs) $(outputs) $(randoms) $(axioms)	\
-	   $(arrays) $(tests) $(testsupport) $(datatypes) $(linalg)	\
-	   $(trig) $(factoreds) $(poly) $(integers) $(floats)		\
-	   $(fractions) $(maths) $(attributes) $(environment)		\
-	   $(basics) $(segments) $(orders) $(domains) $(equations)	\
-	   $(multpoly) $(integers2) $(inputs)
+other := GaussianInteger
+
+library := $(generated) $(lowlevel) $(other) $(sexprs) $(outputs)	\
+	   $(randoms) $(axioms) $(arrays) $(tests) $(testsupport)	\
+	   $(datatypes) $(linalg) $(trig) $(factoreds) $(poly)		\
+	   $(integers) $(floats) $(fractions) $(maths) $(attributes)	\
+	   $(environment) $(basics) $(segments) $(orders) $(domains)	\
+	   $(equations) $(multpoly) $(integers2) $(inputs)
 
 #opts_x/I := -WD+inline -WD+inlCall -Q9 -WD+inlCallInfo
 
 reqfiles := $(patsubst %, common/%.req, $(library) $(runtime_native) $(runtime_lisp))
+generated_reqfiles := $(patsubst %, common/%.req, $(generated))
 
 native_library := $(patsubst %, native/%, $(library) $(runtime_native))
 lisp_library := $(patsubst %, lisp/%, $(library) $(runtime_lisp))
 
 native_tests := $(patsubst %, native/%, $(tests))
 lisp_tests := $(patsubst %, lisp/%, $(tests))
+
+native_generated := $(patsubst %, native/%, $(generated))
+native_src := $(filter-out $(native_generated), $(native_library))
+
+lisp_generated := $(patsubst %, lisp/%, $(generated))
+lisp_src := $(filter-out $(lisp_generated), $(lisp_library))
+
+
 
 all: run-all-tests check-tests compile-aofiles
 
@@ -203,42 +212,37 @@ lisp-inputs: $(patsubst %, lisp/%.ao, $(inputs))
 
 $(patsubst %,%.dep,$(library)): %.dep: $(srcdir)/%.as
 
-dependencies = $(shell cat $(srcdir)/$*.as | sed -n -e 's/ARCH/$(arch)/g;/^--DEPS:/s/^--DEPS://p')
+srcfile = $(call only,$(filter %.as, $^))
+dependencies = $(shell cat $(srcfile) | sed -n -e 's/ARCH/$(arch)/g;/^--DEPS:/s/^--DEPS://p')
 
 $(patsubst %,%.mk, $(native_library)): arch = native
-$(patsubst %,%.mk, $(native_library)): stem = native/$*
 $(patsubst %,%.mk, $(native_library)): native/%.mk: $(srcdir)/%.as
-	@echo MK $@
-	@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
-	@echo > $@.tmp
-	@for i in $(patsubst %, %, $(dependencies));\
-	 do \
-		echo "$(stem).ao: native/$$i.ao" >> $@.tmp;       \
-		echo "$(stem).dep: native/$$i.dep" >> $@.tmp;     \
-		echo "gloop-$*: native/$$i.ao" >> $@.tmp;    \
-		echo "gloop-$*: native/$$i.dep" >> $@.tmp;    \
-	 done;  \
-	 mv $@.tmp $@
 
 $(patsubst %,%.mk, $(lisp_library)): arch = lisp
-$(patsubst %,%.mk, $(lisp_library)): stem = lisp/$*
 $(patsubst %,%.mk, $(lisp_library)): lisp/%.mk: $(srcdir)/%.as
+
+$(patsubst %,%.mk, $(lisp_library) $(native_library)): %.mk:
 	@echo MK $@
 	@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 	@echo > $@.tmp
-	@for i in $(patsubst %, lisp/%, $(dependencies));\
+	@arch=$(firstword $(subst /,$(space),$@));   \
+	 for i in $(patsubst %, %, $(dependencies)); \
 	 do \
-		echo "$(stem).ao: $$i.ao" >> $@.tmp;       \
-		echo "$(stem).dep: $$i.dep" >> $@.tmp;     \
+		echo "$*.ao: $(arch)/$$i.ao" >> $@.tmp;       \
+		echo "$*.dep: $(arch)/$$i.dep" >> $@.tmp;     \
 	 done;  \
 	 mv $@.tmp $@
 
-$(reqfiles): common/%.req: $(srcdir)/%.as
+$(filter-out $(generated_reqfiles), $(reqfiles)): common/%.req: $(srcdir)/%.as
+$(generated_reqfiles): common/%.req: %.as
+
+$(reqfiles): common/%.req: 
 	@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 	@echo REQ $@
 	@echo > $@
-	@for i in $$(cat $(srcdir)/$*.as | sed -n -e '/^--DEPS:/s/^--DEPS://p'); \
+	@for i in $$(cat $(srcfile) | sed -n -e '/^--DEPS:/s/^--DEPS://p'); \
 	 do echo "$$i" >> $@; done
+
 V   := 0
 V_0 := @
 V_1 := 
@@ -258,7 +262,7 @@ O_1 := -O
 define aldor
 $(ALDOR) -fap=$(arch)/$*.ap -I$(srcdir) -Y$(arch)/$(dir $*) \
 	 -lAxiomLib=axiom_$(notdir $*) $(C_$(C)) $(O_$(O)) $(opts_$*) -fasy=$(dir $@)$(notdir $*).asy \
-	 -fao=$@ $(srcdir)/$*.as
+	 -fao=$@ $(srcfile)
 endef
 
 I_ :=
@@ -291,13 +295,19 @@ endef
 
 $(patsubst %,%.ao,$(native_library)): arch=native
 $(patsubst %,%.ao,$(native_library)): all-build-tests
-$(patsubst %,%.ao,$(native_library)): native/%.ao: $(srcdir)/%.as native/%.dep
+$(patsubst %,%.ao,$(native_library)): native/%.ao: native/%.dep
+$(patsubst %,%.ao,$(native_generated)): native/%.ao: %.as 
+$(patsubst %,%.ao,$(native_src)): native/%.ao: $(srcdir)/%.as 
+$(patsubst %,%.ao,$(native_library)): native/%.ao: 
 	$(V_$(V))$(call build-ignoring, %.dep, $?, echo AO $@; $(create_library) $(aldor))
 	@[ -f $@ ]
 
 $(patsubst %,%.ao,$(lisp_library)): arch=lisp
 $(patsubst %,%.ao,$(lisp_library)): all-build-tests
-$(patsubst %,%.ao,$(lisp_library)): lisp/%.ao: $(srcdir)/%.as lisp/%.dep
+$(patsubst %,%.ao,$(lisp_library)): lisp/%.ao: lisp/%.dep
+$(patsubst %,%.ao,$(lisp_src)): lisp/%.ao: $(srcdir)/%.as
+$(patsubst %,%.ao,$(lisp_generated)): lisp/%.ao: %.as
+$(patsubst %,%.ao,$(lisp_library)): lisp/%.ao: 
 	$(V_$(V))$(call build-ignoring, %.dep, $?, \
 		echo AO $@;		\
 		$(create_library)	\
@@ -342,10 +352,6 @@ $(patsubst %, %.dep, $(lisp_library) $(native_library)): %.dep:
 	@./build-dep $(firstword $(subst /,$(space),$@)) $@.tmp $(filter %.req, $^)
 	@mv $@.tmp $@
 
-
-$(patsubst %, show-%, $(library)): show
-$(patsubst %, show-%, $(library)): show-%: %.ao
-	aldor="$(ALDOR)" srcdir=$(srcdir) ./show $*
 
 gloop-tests: $(patsubst %,gloop-%, $(tests))
 
@@ -420,6 +426,36 @@ lisp/load.input: lisp/load.input.dep
 lisp/stuff.lisp: $(srcdir)/runtime/lisp/stuff.lisp
 	cp $^ $@
 
+# lang.as has to be retrieved from the interwebs
+ALDORSOURCE=@ALDORSOURCE@
+ALDORBASICS=$(ALDORSOURCE)/aldor/lib/libax0
+ALDORLANG=$(ALDORSOURCE)/aldor/lib/aldor/src/lang/sal_lang.as
+SVN:=@SVN@
+CURL:=@CURL@
+WGET:=@WGET@
+ifneq "$(findstring https://,$(ALDORSOURCE))" "https://"
+  # Assume local directory if $(ALDORSOURCE) does not start with "https://".
+  XCAT:=cat
+else
+  # Try getting the files from the web.
+  # Choose one of the available access methods.
+ifdef SVN
+  XCAT:=$(SVN) cat
+else
+ifdef CURL
+  XCAT:=$(CURL)
+else
+ifdef WGET
+  XCAT:=$(WGET) -O -
+else
+  XCAT:=echo Get the file manually from
+endif
+endif
+endif
+endif
+
+lang.as:
+	$(XCAT) $(ALDORLANG) > $@
 #
 # Cleaning
 #
@@ -429,6 +465,7 @@ outputs_library = $(native_library) $(lisp_library)
 mostlyclean-local:
 	rm -rf $(foreach i, $(outputs_library), $(i).ao $(i).al $(i).mk $(i).dep)
 	rm -rf common native lisp *.al *.ao *.mk *.o *.ap *.dep *.asy *.lsp *.req *.fm *.c
+	rm $(patsubst %,%.as,$(generated))
 
 clean-local: mostlyclean-local
 
@@ -456,3 +493,13 @@ test-build-dep.tested: test-build-dep build-dep
 
 empty:=
 space:= $(empty) $(empty)
+
+only = $(if $(filter 1,$(words $(1))), $(1), $(error expected a single word here - [$(1)]))
+
+zzz: 
+	$(call only,echo ) 
+
+test-makelib:
+	[ "$(space)" = " " ]
+	[ $(call only, a) = a ]
+
