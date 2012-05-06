@@ -1,4 +1,4 @@
---DEPS: sexpr/SExpressionCategory XLisp System String OutputForm Symbol
+--DEPS: sexpr/SExpressionCategory runtime/c/XLisp System String OutputForm Symbol
 #include "axiom.as"
 
 #pile

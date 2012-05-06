@@ -14,12 +14,19 @@ extend PositiveInteger: with {
     coerce: % -> Integer;
     coerce: % -> NonNegativeInteger;
     coerce: NonNegativeInteger -> %;
+
+    +: (%, %) -> %;
+    random: % -> %;
 } == Integer add {
     import from NonNegativeInteger;
     Rep ==> Integer;
     (a: %) - (b: %): Integer == rep(a) - rep(b);
+    (a: %) + (b: %): Integer == rep(a) + rep(b);
+
     coerce(n: %): NonNegativeInteger == n pretend NonNegativeInteger;
     coerce(n: NonNegativeInteger): % == { zero? n => error "oops"; per(n::Integer)}
     coerce(n: %): Integer == rep n;
     coerce(n: Integer): % == { zero? n => error "oops"; per(n)}
+
+    random(a: %): % == never
 }

@@ -16,7 +16,8 @@ environment := System
 attributes := unitsKnown noZeroDivisors CommutativeStar			\
 	      canonicalUnitNormal finiteAggregate shallowlyMutable	\
 	      CharacteristicNonZero CharacteristicZero Approximate	\
-	      additiveValuation
+	      additiveValuation multiplicativeValuation			\
+	      canonicalsClosed
 
 integers := x/I init_Integer init_NonNegativeInteger		\
 	    init_PositiveInteger init_SingleInteger		\
@@ -25,42 +26,62 @@ integers := x/I init_Integer init_NonNegativeInteger		\
 	    Integer_OrderedRing Integer_IntegralDomain		\
 	    Integer_EuclideanDomain IntegerMod SingleInteger	\
 	    NonNegativeInteger_OrderedAbelianMonoidSup		\
+	    NonNegativeInteger_SemiRing
 
-#	    IntegerNumberSystem
+integers2 := IntegerNumberSystem0 IntegerNumberSystem	\
+	     Integer_RealConstant IntegerFactorizationPackage \
+	     IntegerPrimesPackage IntegerRoots
 
-basics := CoercibleTo FullyRetractableTo RetractableTo ConvertibleTo	\
-          SetCategory init_String BasicType OrderedFinite		\
-          init_Boolean String init_InputForm RepeatedDoubling		\
-          RepeatedSquaring init_Symbol Symbol Symbol_SetCategory	\
-          init_Character Character_Base Logic Character init_Pointer	\
-          String_SetCategory String_OneDimensionalArrayAggregate	\
-          Reference
+basics := x/G x/C x/X CoercibleTo FullyRetractableTo RetractableTo	\
+          ConvertibleTo SetCategory init_String BasicType		\
+          OrderedFinite init_Boolean String init_InputForm		\
+          RepeatedDoubling RepeatedSquaring init_Symbol Symbol		\
+          Symbol_SetCategory init_Character Character_Base Logic	\
+          Character init_Pointer String_SetCategory			\
+          String_OneDimensionalArrayAggregate Reference Boolean		\
+          Boolean_SetCategory
+
+inputs := init_Pattern Any None NoneFunctions1 AnyFunctions1		\
+	   InputForm PatternMatchable init_PatternMatchResult		\
+	   Patternable PatternFunctions1 FullyPatternMatchable		\
+	   PatternMatchQuotientFieldCategory PatternMatchPushDown
+#Pattern
 
 outputs := init_OutputForm OutputForm NumberFormats	\
 	   OutputFormLisp
 
-maths := AbelianGroup CancellationAbelianMonoid AbelianMonoid		\
-         AbelianSemiGroup Group Ring Rng SemiRng SemiGroup SemiRing	\
-         Monoid LeftModule Partial Boolean RightModule BiModule		\
-         Module CommutativeRing EntireRing Algebra DifferentialRing	\
-         DifferentialExtension PartialDifferentialRing Field0		\
-         StepThrough Finite FullyLinearlyExplicitRingOver		\
-         LinearlyExplicitRingOver
+maths := x/Self x/Self2 Finite Finite2 AbelianGroup			\
+         CancellationAbelianMonoid AbelianMonoid AbelianSemiGroup	\
+         Group Ring Rng SemiRng SemiGroup SemiRing Monoid LeftModule	\
+         Partial RightModule BiModule Module CommutativeRing	\
+         EntireRing Algebra DifferentialRing DifferentialExtension	\
+         PartialDifferentialRing Field0 StepThrough			\
+         FullyLinearlyExplicitRingOver LinearlyExplicitRingOver		\
+         UniqueFactorizationDomain Field
 
 domains := PrincipalIdealDomain0 PrincipalIdealDomain GcdDomain0	\
            GcdDomain IntegralDomain EuclideanDomain0 EuclideanDomain	\
            IdealElt
 
-floats := init_DoubleFloat init_Float DoubleFloat_SetCategory	\
-	  DoubleFloat
+floats := init_DoubleFloat init_Float DoubleFloat_SetCategory		\
+	  DoubleFloat RealConstant Float_SetCategory Float_Field0	\
+	  DoubleFloat_Field0
 
-_sexprs := init_SExpression SExpressionCategory
+_sexprs := init_SExpression SExpressionCategory	\
+	   SExpression_SExpressionCategory
+
 sexprs  := $(patsubst %, sexpr/%, $(_sexprs))
 
-fractions := Localize init_Fraction DivisionRing LocalAlgebra	\
-	     Fraction_CommutativeRing Fraction_DivisionRing
+fractions := Localize init_Fraction DivisionRing LocalAlgebra		\
+	     Fraction_CommutativeRing Fraction_DivisionRing		\
+	     QuotientFieldCategory0 QuotientFieldCategory1		\
+	     QuotientFieldCategory Fraction_QuotientFieldCategory0	\
+	     CommonDenominator Fraction_QuotientFieldCategory1 
 
-factoreds := init_Factored
+factoreds := x/PFE init_Factored Factored_Base Factored	\
+             PolynomialFactorizationExplicit		\
+             PolynomialFactorizationExplicit0		\
+             LinearPolynomialEquationByFractions
 
 randoms := RandomNumberGenerator RandomNumberSource
 
@@ -74,7 +95,8 @@ poly := x/A x/AC PolynomialRing FiniteAbelianMonoidRing			\
 	SparseUnivariatePolynomial_UnivariatePolynomialCategory0	\
 	PseudoRemainderSequence UnivariatePolynomialCategory		\
 	PolynomialCategory SparseUnivariatePolynomial_R			\
-	SparseUnivariatePolynomial_UnivariatePolynomialCategory
+	SparseUnivariatePolynomial_UnivariatePolynomialCategory		\
+	UnivariatePolynomialCategoryFunctions2
 
 multpoly := #Polynomial UserDefinedPartialOrdering	\
 	    #SparseMultivariatePolynomial IndexedExponents
@@ -84,23 +106,27 @@ orders := PartialOrder OrderedSet Comparable OrderedAbelianGroup	\
 	  OrderedCancellationAbelianMonoid OrderedIntegralDomain	\
 	  OrderedRing OrderedAbelianMonoidSup
 
-datatypes := init_List Aggregate HomogeneousAggregate List Fold		\
-	     RecursiveAggregate UnaryRecursiveAggregate			\
-	     LinearAggregate StreamAggregate Collection			\
-	     IndexedAggregate EltableAggregate Eltable			\
+datatypes := x/R x/FSA init_List Aggregate HomogeneousAggregate List	\
+	     Set Fold SetAggregate FiniteSetAggregate			\
+	     IndexedFlexibleArray FlexibleArray BagAggregate		\
+	     Dictionary DictionaryOperations RecursiveAggregate		\
+	     UnaryRecursiveAggregate LinearAggregate StreamAggregate	\
+	     Collection IndexedAggregate EltableAggregate Eltable	\
 	     List_StreamAggregate FiniteLinearAggregate			\
 	     FiniteLinearAggregateSort IndexedOneDimensionalArray	\
 	     ExtensibleLinearAggregate List_ExtensibleLinearAggregate	\
-	     BitAggregate IndexedBits ListAggregate List_ListAggregate
+	     BitAggregate IndexedBits ListAggregate			\
+	     List_ListAggregate
 
 segments := x/S x/S1 x/S2 x/S3 x/H x/LU init_UniversalSegment		\
 	    init_Segment SegmentCategory SegmentExpansionCategory	\
-	    UniversalSegment Segment_SegmentCategory Segment
+	    UniversalSegment Segment_SegmentCategory Segment		\
+	    OrderedSemiRingSegment
 
 equations := Evalable InnerEvalable Equation_SetCategory	\
-	     init_Equation
+	     init_Equation FullyEvalableOver
 
-trig := RadicalCategory
+trig := RadicalCategory CombinatorialFunctionCategory
 
 arrays := init_PrimitiveArray PrimitiveArray_Base PrimitiveArray	\
 	  InnerIndexedTwoDimensionalArray				\
@@ -109,7 +135,7 @@ arrays := init_PrimitiveArray PrimitiveArray_Base PrimitiveArray	\
 linalg := init_Vector init_Matrix Matrix_TwoDimensionalArrayCategory	\
 	   Vector_FiniteLinearAggregate VectorCategory			\
 	   IndexedVector_FiniteLinearAggregate IndexedVector Vector	\
-	   MatrixCategory Matrix_MatrixCategory
+	   MatrixCategory Matrix_MatrixCategory 
 
 axioms := axioms/Stream axioms/RandomGenerator axioms/AxiomEnv	\
 	  axioms/Axiom axioms/AxiomConstructorPackage
@@ -117,11 +143,13 @@ axioms := axioms/Stream axioms/RandomGenerator axioms/AxiomEnv	\
 testsupport := tests/Assert tests/Assertions tests/TestCategory
 
 tests := tests/TestOutputForm tests/TestSExpression tests/TestInt	\
-	 tests/TestString tests/TestTuple tests/TestList		\
-	 tests/TestPrimitiveArray tests/TestList_StreamAggregate	\
-	 tests/TestVector tests/TestIndexedDirectProduct		\
-	 tests/TestUniversalSegment tests/TestPseudoRemainderSequence	\
-	 tests/TestPolynomialRing tests/TestSUP0 tests/TestP0
+	 tests/TestFold tests/TestString tests/TestTuple		\
+	 tests/TestList tests/TestPrimitiveArray			\
+	 tests/TestList_StreamAggregate tests/TestVector		\
+	 tests/TestIndexedDirectProduct tests/TestUniversalSegment	\
+	 tests/TestOrderedSemiRingSegment				\
+	 tests/TestPseudoRemainderSequence tests/TestPolynomialRing	\
+	 tests/TestSUP0 tests/TestP0
 
 runtime_native := runtime/native/Local runtime/native/rtexns	\
 		runtime/native/LString runtime/native/SExpression
@@ -136,9 +164,9 @@ library := $(lang) $(other) $(sexprs) $(outputs) $(randoms) $(axioms)	\
 	   $(trig) $(factoreds) $(poly) $(integers) $(floats)		\
 	   $(fractions) $(maths) $(attributes) $(environment)		\
 	   $(basics) $(segments) $(orders) $(domains) $(equations)	\
-	   $(multpoly)
+	   $(multpoly) $(integers2) $(inputs)
 
-opts_x/I := -WD+inline -WD+inlCall -Q9 -WD+inlCallInfo
+#opts_x/I := -WD+inline -WD+inlCall -Q9 -WD+inlCallInfo
 
 reqfiles := $(patsubst %, common/%.req, $(library) $(runtime_native) $(runtime_lisp))
 
@@ -148,10 +176,12 @@ lisp_library := $(patsubst %, lisp/%, $(library) $(runtime_lisp))
 native_tests := $(patsubst %, native/%, $(tests))
 lisp_tests := $(patsubst %, lisp/%, $(tests))
 
-all: run-all-tests check-tests compile_aofiles
+all: run-all-tests check-tests compile-aofiles
 
-lisp: lisp/load.input
-	make $(patsubst %,lisp/%.lsp, $(shell cat lisp/load.input.dep))
+lisp: compile-lisp lisp/load.input lisp/stuff.lisp
+compile-lisp:
+	@echo LISP $(words $(shell cat lisp/load.input.dep)) files
+	@make $(patsubst %,lisp/%.lsp, $(shell cat lisp/load.input.dep))
 
 list-srcfiles:
 	@echo $(patsubst %, %.as, $(library))
@@ -161,10 +191,12 @@ compile-fmfiles: $(patsubst %,%.fm,$(native_library))
 compile-ofiles: $(patsubst %,%.o, $(native_library))
 compile-tests: $(patsubst %, %.exe, $(native_tests))
 
-compile_axiom: $(patsubst %, %.lsp, $(lisp_library))
+compile-axiom: $(patsubst %, %.lsp, $(lisp_library))
 
 gloop-tests: $(patsubst %,gloop-%, $(filter %/Test%, $(native_tests)))
 check-tests: $(patsubst %,check-%, $(tests))
+
+lisp-inputs: $(patsubst %, lisp/%.ao, $(inputs))
 
 -include $(patsubst %,%.mk, $(native_library))
 -include $(patsubst %,%.mk, $(lisp_library))
@@ -207,17 +239,18 @@ $(reqfiles): common/%.req: $(srcdir)/%.as
 	@echo > $@
 	@for i in $$(cat $(srcdir)/$*.as | sed -n -e '/^--DEPS:/s/^--DEPS://p'); \
 	 do echo "$$i" >> $@; done
-V := 0
-V_0  := @
-V_1 :=
+V   := 0
+V_0 := @
+V_1 := 
 
 C_  :=
+C_I := -WD+tfImport -WD+tipBup -Mpreview -WD+stabImport -WD+tf -WD+tiTf
 C_F := -WD+lib -WD+tf -WD+tfFloat
-C_L := -WD+lib -WD+symeFill
-C_T := -Mpreview -WD+tipBup -WD+tipTdn -WD+titf
+C_L := -WD+lib -WD+symeFill -WD+sefoClose
+C_T := -Mpreview -WD+tipBup -WD+tipTdn -WD+tiTf
 C_T2 := -Mpreview -WD+tipBup -WD+tipTdn -WD+tf -WD+symeHas
-C_T3 := -Mpreview -WD+tipBup -WD+tfs
-
+C_T3 := -Mpreview -WD+tipBup -WD+tfs -WD+tfsMulti
+C_X := $(X)
 O_ := -O
 O_0 :=
 O_1 := -O
@@ -247,7 +280,7 @@ define aldor_interp_cmd
 endef
 
 define create_library
-	[ ! -z $(arch) ]
+	[ ! -z $(arch) ]; \
 	rm -f $(arch)/$(dir $*)libaxiom_$(notdir $*).al; \
 	for i in $$(cat $(arch)/$*.dep); \
 	do \
@@ -259,10 +292,7 @@ endef
 $(patsubst %,%.ao,$(native_library)): arch=native
 $(patsubst %,%.ao,$(native_library)): all-build-tests
 $(patsubst %,%.ao,$(native_library)): native/%.ao: $(srcdir)/%.as native/%.dep
-	$(V_$(V))$(call build-ignoring, %.dep, $?, \
-		echo AO $@;		\
-		$(create_library)	\
-		$(aldor))
+	$(V_$(V))$(call build-ignoring, %.dep, $?, echo AO $@; $(create_library) $(aldor))
 	@[ -f $@ ]
 
 $(patsubst %,%.ao,$(lisp_library)): arch=lisp
@@ -279,7 +309,7 @@ $(patsubst %, %.cmd, $(native_library)): native/%.cmd:
 	gdb --args $(aldor)
 
 define build-ignoring
-	$(if $(filter-out $(1), $(2)), $(3), true)
+	$(if $(filter-out $(1), $(2)), $(3), )
 endef
 
 $(patsubst %, %.fm, $(native_library) $(lisp_library)): %.fm: %.ao
@@ -299,8 +329,6 @@ $(patsubst %, %.exe, $(native_tests)): %.exe: %.ao %.dep
 $(patsubst %, %.lsp, $(lisp_library)): %.lsp: %.ao
 	@echo LSP $*
 	@$(ALDOR) -flsp=$@ $*.ao
-
-archForTarget = $(firstword $(subst /,$(space),$@))
 
 $(patsubst %, %.dep,$(lisp_library)): build-dep
 $(patsubst %, %.dep, $(lisp_library)): lisp/%.dep: common/%.req
@@ -367,23 +395,30 @@ $(patsubst %, native/%.checked, $(tests)): native/%.checked:
 # lisp interface.
 #
 
-lisp_subset := $(basics) $(datatypes) $(integers)
+lisp_subset := $(basics) $(datatypes) $(integers) $(integers2)
 lisp/load.input.req: $(srcdir)/Makefile.in
-	for i in $(lisp_subset); do echo $$i; done > $@
+	@echo FILE_REQ $@
+	@for i in $(lisp_subset); do echo $$i; done > $@
 
 lisp/load.input.dep: lisp/load.input.req $(patsubst %, lisp/%.dep,$(lisp_subset))
+	@echo FILE_DEP $@
 	@[ -d $(dir $@) ] || mkdir -p $(dir $@)
-	./build-dep lisp $@.tmp lisp/load.input.req
-	mv $@.tmp $@
+	@./build-dep lisp $@.tmp lisp/load.input.req
+	@mv $@.tmp $@
 
 lisp/runtime.lsp:
-	ar x  /home/pab/Work/aldordist/opt/share/lib/libfoam.al runtime.ao
-	$(ALDOR) -flsp=$@ runtime.ao
-	rm runtime.ao
+	@echo EXTRACT $@
+	@ar x  /home/pab/Work/aldordist/opt/share/lib/libfoam.al runtime.ao
+	@$(ALDOR) -flsp=$@ runtime.ao
+	@rm runtime.ao
 
 lisp/load.input: lisp/load.input.dep
-	echo > $@
-	for i in $(filter-out lang, $(shell cat lisp/load.input.dep)); do if [ ! "$$i" = "" ]; then echo ")lib $$i" >> $@; fi; done
+	@echo FILE $@
+	@echo > $@
+	@for i in $(filter-out lang, $(shell cat lisp/load.input.dep)); do if [ ! "$$i" = "" ]; then echo ")lib $$i" >> $@; fi; done
+
+lisp/stuff.lisp: $(srcdir)/runtime/lisp/stuff.lisp
+	cp $^ $@
 
 #
 # Cleaning

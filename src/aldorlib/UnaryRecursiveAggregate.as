@@ -1,4 +1,5 @@
---DEPS:  RecursiveAggregate System Segment_SegmentCategory UniversalSegment Integer_OrderedRing
+--DEPS: RecursiveAggregate System Segment_SegmentCategory UniversalSegment 
+--DEPS: Integer_OrderedRing NonNegativeInteger_SemiRing OrderedSemiRingSegment
 #include "axiom.as"
 
 import from Boolean;
@@ -193,6 +194,7 @@ UnaryRecursiveAggregate(S:Type): Category == RecursiveAggregate S with {
     x}
 
   cycleLength x: NonNegativeInteger == {
+    import from OrderedSemiRingSegment NonNegativeInteger;
     empty? x => 0;
     empty?(x := findCycle x) => 0;
     y := rest x;

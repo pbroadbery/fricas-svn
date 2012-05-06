@@ -1,4 +1,4 @@
---DEPS: init_String init_Character init_List Integer runtime/ARCH/Local 
+--DEPS: init_String init_Character Integer runtime/ARCH/Local 
 --DEPS: SingleInteger NonNegativeInteger
 #include "axiom"
 
@@ -19,6 +19,7 @@ extend String: with {
        string: Integer -> %;
 
        =: (%, %) -> Boolean;
+       ~=: (%, %) -> Boolean;
 
        print: % -> ();
 }
@@ -37,6 +38,7 @@ extend String: with {
    #(x: %): SingleInteger == length rep x;
 
    (a: %) = (b: %): Boolean == rep(a) = rep(b);
+   (a: %) ~= (b: %): Boolean == not(a = b);
 
    concat(a: %, b: %): % == { 
    	     s := new(# a + # b, char " "); 

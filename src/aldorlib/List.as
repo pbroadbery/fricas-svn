@@ -1,4 +1,4 @@
---DEPS:  init_List init_Generator NonNegativeInteger SetCategory Tuple runtime/ARCH/Local
+--DEPS:  init_List init_Generator NonNegativeInteger SetCategory Tuple runtime/ARCH/Local Partial
 #include "axiom.as"
 
 import from Boolean;
@@ -13,11 +13,12 @@ extend List(T: Type): with {
   first: % -> T;
   second: % -> T;
   rest: % -> %;
-  member?: (T, %) -> Boolean;
   reverse: % -> %;
   cons: (T, %) -> %;
   bracket: Tuple T -> %;
+  list: Tuple T -> %;
   bracket: Generator T -> %;
+  bracket: Generator Partial T -> Partial %;
   generator: % -> Generator T;
   #: % -> NonNegativeInteger;
   concat: (T, %) -> %;
@@ -34,6 +35,7 @@ extend List(T: Type): with {
      reduce: ((T, T) -> T, %, T, T) -> T;
      removeDuplicates: % -> %;
      setUnion: (%, %) -> %;
+     member?: (T, %) -> Boolean;
   }
 
   find: (T -> Boolean, %) -> Partial T;
@@ -56,7 +58,8 @@ extend List(T: Type): with {
   lastCell: % -> %;
   nil: () -> %;
 
-  export from 'first', 'rest'
+  export from 'first', 'rest';
+  export from T;
 }
  == add {
   Rep ==> ListLisp T;
@@ -80,14 +83,13 @@ extend List(T: Type): with {
   
   second(x: %): T == first rest x;
 
-  member?(x: T, l: %): Boolean == never;
-
   (a: %) = (b: %): Boolean == {
      empty? a => empty? b;
      empty? b => false;
      rest a = rest b;}
 
   [t: Tuple T]: % == [e for e in t];
+  list(t: Tuple T): % == [t];
 
   [g: Generator T]: % == {
      l := nil();
@@ -136,6 +138,22 @@ extend List(T: Type): with {
      empty? x => error "empty list";
      while not empty? rest x repeat x := rest x;
      x
+  }
+
+  bracket(g: Generator Partial T): Partial % == {
+     import from Partial T;
+     list: List T := empty();
+     last: List T := empty();
+     for t in g repeat {
+        failed? t => return failed();
+	if empty? list then
+	    list := last := [t::T]
+	else {
+	    last.rest := [t::T];
+	    last := last.rest
+        }
+     }
+     [list]
   }
 
   last(x: %): T == first lastCell x;
@@ -194,7 +212,11 @@ extend List(T: Type): with {
 	acc := f(acc, item);
      }
      acc}
-    setUnion(l1: %, l2: %): % == never
+    setUnion(l1: %, l2: %): % == never;
+    member?(t: T, l: %): Boolean == {
+        for x in l repeat if x = t then return true;
+	return false;
+    }
 }
 }
 

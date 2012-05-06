@@ -8,6 +8,8 @@ extend Integer: TheInteger with {
     one?: % -> Boolean;
     positive?: % -> Boolean;
     shift: (%, Integer) -> %;
+    length: % -> Integer;
+    bit?: (%, %) -> Boolean;
     -: % -> %;
     1: %;
     0: %;
@@ -40,11 +42,15 @@ extend Integer: TheInteger with {
     random: % -> %;
     integer: Literal -> %;
 
+
+    inc: % -> %;
 } == add {
     Rep ==> BInt;
     import from Machine;
 
     local coerce(b: Bool): Boolean == b pretend Boolean;
+    local srep(s: SingleInteger): SInt == s pretend SInt;
+    local sper(s: SInt): SingleInteger == s pretend SingleInteger;
 
     one?(x: %): Boolean == (rep(x) = 1)::Boolean;
     zero?(x: %): Boolean == (zero? rep x)::Boolean;
@@ -53,7 +59,15 @@ extend Integer: TheInteger with {
     even?(x: %): Boolean == even?(rep x)::Boolean;
     odd?(x: %): Boolean == odd?(rep x)::Boolean;
 
-    shift(x: %, n: %): % == never;
+    shift(x: %, n: %): % == {
+       n = 0 => x;
+       n > 0 => per shiftUp(rep x, convert rep n);
+       per shiftDown(rep x, convert rep(-n));
+    }
+    
+    bit?(x: %, n: %): Boolean == bit(rep x, convert rep n)::Boolean;
+    length(n: %): % == per convert(length rep n);
+
     -(n: %): % == per(-(rep n));
     (a: %) - (b: %): % == per(rep a - rep b);
     (a: %) + (b: %): % == per(rep a + rep b);
@@ -88,6 +102,7 @@ extend Integer: TheInteger with {
     powmod(x: %, y: %, p: %): % == per mod_^(rep x, rep y, rep p);
 
     random(x: %): % == never;
+    inc(x: %): % == x + 1
 }
 
 

@@ -11,6 +11,7 @@ extend PositiveInteger: Join(OrderedAbelianSemiGroup, Monoid, CommutativeStar) w
             gcd: (%,%) -> %
               ++ gcd(a,b) computes the greatest common divisor of two
               ++ positive integers \spad{a} and b.
+	    random: () -> %
  == add
   Rep ==> Integer
   import from Rep
@@ -21,3 +22,4 @@ extend PositiveInteger: Join(OrderedAbelianSemiGroup, Monoid, CommutativeStar) w
   (*)(a: %, b: %) : % == per(rep(a)*rep(b))
   gcd(a: %, b: %) : % == per(gcd(rep(a), rep(b)))
 
+  random(): % == never

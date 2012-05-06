@@ -1,5 +1,8 @@
---DEPS:  BasicType Boolean
+--DEPS:  BasicType Boolean System String
 #include "axiom"
+
+import from System;
+import from String;
 import from Boolean;
 
 Partial(T: Type): with {
@@ -11,7 +14,14 @@ Partial(T: Type): with {
     coerce: % -> T;
     if T has BasicType then BasicType;
 
+    -- These are for axiom compatibility.
+    case: (%, 'failed') -> Boolean;
+    case: (%, with) -> Boolean;
+    bracket: T -> %;
+    bracket: 'failed' -> %;
+
     export from T;
+    export from 'failed';
 } == add {
   Rep ==> Union(success: T, failed: 'failed');
   import from Rep;
@@ -28,4 +38,9 @@ Partial(T: Type): with {
        rep(b) case success and rep(a).success = rep(b).success
   }
   }
+
+  (a: %) case (t: with): Boolean == success? a;
+  (a: %) case (s: 'failed'): Boolean == failed? a;
+  [t: T]: % == success(t);
+  [f: 'failed']: % == failed();
 }

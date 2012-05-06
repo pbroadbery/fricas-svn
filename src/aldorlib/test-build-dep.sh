@@ -57,7 +57,7 @@ set -e
 
 echo > lang.req
 
-$build_dep lang.dep lang.req
+$build_dep . lang.dep lang.req
 if [ ! -f lang.dep ];
 then 
     echo "no file created"
@@ -76,19 +76,19 @@ done
 echo > Basic.req
 echo lang >> Basic.req
 
-$build_dep Basic.dep Basic.req
+$build_dep . Basic.dep Basic.req
 contains lang Basic.dep 
 
 echo > Next.req
 echo Basic >> Next.req
 
-$build_dep Next.dep Next.req
+$build_dep . Next.dep Next.req
 precedes lang Basic Next.dep
 
 echo > Next2.req
 echo Basic >> Next2.req
 
-$build_dep Next2.dep Next2.req
+$build_dep . Next2.dep Next2.req
 precedes lang Basic Next2.dep
 
 echo > Top.req
@@ -96,7 +96,7 @@ echo Next >> Top.req
 echo Next2 >> Top.req
 echo Basic >> Top.req
 
-$build_dep Top.dep Top.req
+$build_dep . Top.dep Top.req
 echo ===
 cat Top.dep
 echo ===
@@ -107,7 +107,7 @@ precedes Basic Next2 Top.dep
 oneOf Basic Top.dep
 
 echo missing > fail.req
-if $build_dep fail.dep fail.req
+if $build_dep . fail.dep fail.req
 then
     echo should have failed
     exit 1

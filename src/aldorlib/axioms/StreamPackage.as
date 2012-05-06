@@ -3,10 +3,10 @@
 
 StreamPackage: with 
    pair: (T: Type) -> Stream T -> Stream Cross(T, T)
+   allPairs: (T: Type) -> Stream T -> Stream(T, T);
 == add {
    pair(T: Type)(f: Stream T): Stream(T, T) == [(a, b) for a in f for b in f]
    allpairs(T: Type)(f: Stream T): Stream(T, T) == for i in f for strm in reverseSegments 
-
 }
 
 

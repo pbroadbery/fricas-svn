@@ -808,7 +808,7 @@
 ;; given the name of a file (a string), return the name of the AXIOM-XL function
 ;; that initialises the file.
 (defun axiomxl-file-init-name (filename)
-  (intern (format nil "G-~a" (string-downcase filename)) 'foam-user))
+  (intern (format nil "G-~a" filename) 'foam-user))
 
 ;; given the name of the file, id name, and hashcode, return the
 ;; AXIOM-XL identifier for that object

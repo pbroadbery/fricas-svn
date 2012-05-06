@@ -1,6 +1,6 @@
 --DEPS: List OutputForm runtime/ARCH/rtexns NonNegativeInteger_OrderedAbelianMonoidSup 
---DEPS: runtime/ARCH/Local Integer_SetCategory tests/Assert tests/TestCategory
-
+--DEPS: runtime/ARCH/Local Integer_IntegralDomain tests/Assert tests/TestCategory
+--DEPS: Boolean_SetCategory
 #include "axiom.as"
 
 import from OutputForm;
@@ -9,17 +9,18 @@ import from String;
 TestList: TestCategory with {
 }
 == add {
-  local assertTrue(x: Boolean): () == if not x then never;
-
   test(): () == {
        import from Assert NonNegativeInteger;
        import from Assert Integer;
+       import from Assertions;
        import from IO;
        import from List Integer;
        import from List OutputForm;
        import from OutputForm;
        import from Integer;
        import from NonNegativeInteger;
+       import from Boolean;
+
        l: List Integer := empty();
        not empty? l => never;
        l := cons(1, l);
@@ -88,11 +89,31 @@ TestList: TestCategory with {
 
        assertEquals(e, concat(e, e));
        assertEquals([1], concat(e,[1]));
-return;
+
        assertEquals([1], concat([1],e));
 
        assertEquals([1,2], concat([],[1,2]));
        assertEquals([1,2], concat([1],[2]));
+       
+       import from List List Integer;
+       for xl in [[1], [1,2], [1,2,3]] repeat {
+              assertFalse(member?(10, xl));
+	      assertTrue(member?(1, xl));
+       }
+
+       local pl: Partial List Integer;
+       pl := [i exquo 5 for i in [5,10,15]];
+       print coerce success? pl;
+       assertTrue(success? pl);
+       pl := [i exquo 5 for i in [5,10,7,15]];
+       print coerce success? pl;
+       assertFalse(success? pl);
+
+       c: Integer := 0;
+       pl := [(c := c+1; i exquo 5) for i in [5, 6, 7, 8]];
+       print coerce success? pl;
+       assertFalse(success? pl);
+       assertEquals(2, c);
 }
 
 local assertEquals(l1: List Integer, l2: List Integer): () == {
@@ -108,6 +129,7 @@ local assertEquals(l1: List Integer, l2: List Integer): () == {
 }
 
 test2(): () == {
+       import from Assertions;
        import from List Integer;
        import from Integer;
        assertTrue(empty? reverse empty());

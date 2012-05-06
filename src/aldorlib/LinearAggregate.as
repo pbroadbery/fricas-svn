@@ -34,6 +34,10 @@ LinearAggregate(S:Type): Category ==
       ++ elt(u,i..j) (also written: \axiom{a(i..j)}) returns the aggregate of
       ++ elements \axiom{u} for k from i to j in that order.
       ++ Note: in general, \axiom{a.s = [a.k for i in s]}.
+   apply: (%,UniversalSegment(Integer)) -> %;
+      ++ apply(u,i..j) (also written: \axiom{a(i..j)}) returns the aggregate of
+      ++ elements \axiom{u} for k from i to j in that order.
+      ++ Note: in general, \axiom{a.s = [a.k for i in s]}.
    delete: (%,Integer) -> %;
       ++ delete(u,i) returns a copy of u with the \axiom{i}th element deleted.
       ++ Note: for lists, \axiom{delete(a,i) == concat(a(0..i - 1),a(i + 1,..))}.
@@ -73,4 +77,6 @@ LinearAggregate(S:Type): Category ==
   if % has finiteAggregate then
     maxIndex(l: %): Integer == #l - 1 + minIndex l;
   }
+
+  default apply(a: %, u: UniversalSegment(Integer)): % == never;
 }

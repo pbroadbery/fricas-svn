@@ -1,4 +1,4 @@
---DEPS:  BasicType Partial
+--DEPS:  lang
 #include "axiom"
 
 TheList: Category == with;

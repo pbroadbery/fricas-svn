@@ -1,4 +1,4 @@
---DEPS: tests/Assertions SetCategory Ring OutputForm
+--DEPS: tests/Assertions BasicType Ring OutputForm
 --DEPS: NonNegativeInteger_OrderedAbelianMonoidSup runtime/ARCH/Local 
 --DEPS: String_SetCategory 
 

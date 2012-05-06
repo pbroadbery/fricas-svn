@@ -3,4 +3,4 @@
 
 import from Boolean;
 
-OrderedIntegralDomain(): Category == Join(IntegralDomain, OrderedRing) with;
+OrderedIntegralDomain: Category == Join(IntegralDomain, OrderedRing) with;

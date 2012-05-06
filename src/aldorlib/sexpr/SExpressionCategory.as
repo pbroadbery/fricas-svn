@@ -4,7 +4,7 @@
 #pile
 default Str, Sym, Int, Flt, Expr: SetCategory
 SExpressionCategory(Str, Sym, Int, Flt, Expr): Category == Decl where
-    Decl ==> with
+    Decl ==> SetCategory with
         eq:        (%,%) -> Boolean
           ++ eq(s, t) is true if EQ(s,t) is true in Lisp.
         null?:     % -> Boolean

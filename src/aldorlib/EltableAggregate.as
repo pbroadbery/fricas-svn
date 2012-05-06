@@ -8,7 +8,6 @@ EltableAggregate(Dom:SetCategory, Im:Type): Category ==
 -- and series won't have to support qelt's and setelt's.
   Eltable(Dom, Im) with
     elt : (%, Dom, Im) -> Im
-    elt : (%, Dom, Im) -> Im
        ++ elt(u, x, y) applies u to x if x is in the domain of u,
        ++ and returns y otherwise.
        ++ For example, if u is a polynomial in \axiom{x} over the rationals,
@@ -20,6 +19,7 @@ EltableAggregate(Dom:SetCategory, Im:Type): Category ==
        ++ domain of \axiom{u} a memory-access violation may occur.  If a check
        ++ on whether \axiom{x} is in the domain of \axiom{u} is required, use
        ++ the function \axiom{elt}.
+    apply: (%, Dom) -> Im
     if % has shallowlyMutable then
        set!: (%, Dom, Im) -> Im
        setelt : (%, Dom, Im) -> Im

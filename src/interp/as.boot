@@ -457,8 +457,10 @@ asyMkpred predlist ==
 
 asytranForm(form,levels,local?) ==
   u := asytranForm1(form,levels,local?)
-  null u => hahah()
+  null u => hahah(form)
   u
+
+hahah(form) == sayBrightly form
 
 asytranForm1(form,levels,local?) ==
   form is ['With,left,cat] =>

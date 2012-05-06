@@ -3,6 +3,8 @@
 
 import from Boolean;
 
+local xyzzy: with == add;
+
 RecursiveAggregate(S:Type): Category == HomogeneousAggregate(S) with {
    children: % -> List %;
      ++ children(u) returns a list of the children of aggregate u.

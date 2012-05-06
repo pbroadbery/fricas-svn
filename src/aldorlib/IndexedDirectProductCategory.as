@@ -1,5 +1,5 @@
 --DEPS: SetCategory OrderedSet AbelianProductCategory Comparable
---DEPS: OrderedAbelianMonoidSup init_Generator
+--DEPS: OrderedAbelianMonoidSup init_Generator List
 
 #include "axiom.as"
 import from Boolean;

@@ -7,6 +7,7 @@ extend Symbol: with {
    #: String -> %;
    =: (%, %) -> Boolean;
    name: % -> String;
+   new: () -> %;
 }
 == add {
    Rep ==> String;
@@ -16,4 +17,6 @@ extend Symbol: with {
    name(a: %): String == rep a;
 
    (a: %) = (b: %): Boolean == rep a = rep b;
+
+   new(): % == never;
 }

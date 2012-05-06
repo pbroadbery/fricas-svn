@@ -91,6 +91,7 @@ fi
 IFS=" ""	$as_nl"
 
 # Find who we are.  Look in the path if we contain no directory separator.
+as_myself=
 case $0 in #((
   *[\\/]* ) as_myself=$0 ;;
   *) as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -216,11 +217,18 @@ IFS=$as_save_IFS
   # We cannot yet assume a decent shell, so we have to provide a
 	# neutralization value for shells without unset; and this also
 	# works around shells that cannot unset nonexistent variables.
+	# Preserve -v and -x to the replacement shell.
 	BASH_ENV=/dev/null
 	ENV=/dev/null
 	(unset BASH_ENV) >/dev/null 2>&1 && unset BASH_ENV ENV
 	export CONFIG_SHELL
-	exec "$CONFIG_SHELL" "$as_myself" ${1+"$@"}
+	case $- in # ((((
+	  *v*x* | *x*v* ) as_opts=-vx ;;
+	  *v* ) as_opts=-v ;;
+	  *x* ) as_opts=-x ;;
+	  * ) as_opts= ;;
+	esac
+	exec "$CONFIG_SHELL" $as_opts "$as_myself" ${1+"$@"}
 fi
 
     if test x$as_have_required = xno; then :
@@ -721,6 +729,7 @@ enable_gmp
 enable_algebra_optimization
 with_x
 enable_aldor
+with_aldor
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1136,7 +1145,7 @@ Try \`$0 --help' for more information"
     $as_echo "$as_me: WARNING: you should use --build, --host, --target" >&2
     expr "x$ac_option" : ".*[^-._$as_cr_alnum]" >/dev/null &&
       $as_echo "$as_me: WARNING: invalid host type: $ac_option" >&2
-    : ${build_alias=$ac_option} ${host_alias=$ac_option} ${target_alias=$ac_option}
+    : "${build_alias=$ac_option} ${host_alias=$ac_option} ${target_alias=$ac_option}"
     ;;
 
   esac
@@ -1366,6 +1375,7 @@ Optional Packages:
   --with-lisp=L           use L as Lisp platform
   --with-lisp-flavor=F    obsolete and ignored
   --with-x                use the X Window System
+  --with-aldor            specify place of aldor root
 
 Some influential environment variables:
   CC          C compiler command
@@ -1491,7 +1501,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 
 	ac_retval=1
 fi
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_compile
@@ -1537,7 +1547,7 @@ fi
   # interfere with the next link command; also delete a directory that is
   # left behind by Apple's compiler.  We do this before executing the actions.
   rm -rf conftest.dSYM conftest_ipa8_conftest.oo
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_link
@@ -1574,7 +1584,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 
     ac_retval=1
 fi
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_cpp
@@ -1587,10 +1597,10 @@ fi
 ac_fn_c_check_header_mongrel ()
 {
   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  if eval "test \"\${$3+set}\"" = set; then :
+  if eval \${$3+:} false; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
 $as_echo_n "checking for $2... " >&6; }
-if eval "test \"\${$3+set}\"" = set; then :
+if eval \${$3+:} false; then :
   $as_echo_n "(cached) " >&6
 fi
 eval ac_res=\$$3
@@ -1657,7 +1667,7 @@ $as_echo "$as_me: WARNING: $2: proceeding with the compiler's result" >&2;}
 esac
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
 $as_echo_n "checking for $2... " >&6; }
-if eval "test \"\${$3+set}\"" = set; then :
+if eval \${$3+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   eval "$3=\$ac_header_compiler"
@@ -1666,7 +1676,7 @@ eval ac_res=\$$3
 	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
 $as_echo "$ac_res" >&6; }
 fi
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_header_mongrel
 
@@ -1707,7 +1717,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
        ac_retval=$ac_status
 fi
   rm -rf conftest.dSYM conftest_ipa8_conftest.oo
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_run
@@ -1721,7 +1731,7 @@ ac_fn_c_check_header_compile ()
   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
 $as_echo_n "checking for $2... " >&6; }
-if eval "test \"\${$3+set}\"" = set; then :
+if eval \${$3+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -1739,7 +1749,7 @@ fi
 eval ac_res=\$$3
 	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
 $as_echo "$ac_res" >&6; }
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_header_compile
 
@@ -1754,7 +1764,7 @@ ac_fn_c_check_decl ()
   as_decl_use=`echo $2|sed -e 's/(/((/' -e 's/)/) 0&/' -e 's/,/) 0& (/g'`
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $as_decl_name is declared" >&5
 $as_echo_n "checking whether $as_decl_name is declared... " >&6; }
-if eval "test \"\${$3+set}\"" = set; then :
+if eval \${$3+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -1785,7 +1795,7 @@ fi
 eval ac_res=\$$3
 	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
 $as_echo "$ac_res" >&6; }
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_decl
 
@@ -1797,7 +1807,7 @@ ac_fn_c_check_func ()
   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
 $as_echo_n "checking for $2... " >&6; }
-if eval "test \"\${$3+set}\"" = set; then :
+if eval \${$3+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -1852,7 +1862,7 @@ fi
 eval ac_res=\$$3
 	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
 $as_echo "$ac_res" >&6; }
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_func
 cat >config.log <<_ACEOF
@@ -1861,7 +1871,6 @@ running configure, to aid debugging if configure makes a mistake.
 
 It was created by FriCAS $as_me 2012-03-08, which was
 generated by GNU Autoconf 2.67.  Invocation command line was
-
   $ $0 $@
 
 _ACEOF
@@ -2260,7 +2269,7 @@ $SHELL "$ac_aux_dir/config.sub" sun4 >/dev/null 2>&1 ||
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking build system type" >&5
 $as_echo_n "checking build system type... " >&6; }
-if test "${ac_cv_build+set}" = set; then :
+if ${ac_cv_build+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_build_alias=$build_alias
@@ -2294,7 +2303,7 @@ case $build_os in *\ *) build_os=`echo "$build_os" | sed 's/ /-/g'`;; esac
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking host system type" >&5
 $as_echo_n "checking host system type... " >&6; }
-if test "${ac_cv_host+set}" = set; then :
+if ${ac_cv_host+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test "x$host_alias" = x; then
@@ -2327,7 +2336,7 @@ case $host_os in *\ *) host_os=`echo "$host_os" | sed 's/ /-/g'`;; esac
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking target system type" >&5
 $as_echo_n "checking target system type... " >&6; }
-if test "${ac_cv_target+set}" = set; then :
+if ${ac_cv_target+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test "x$target_alias" = x; then
@@ -2423,7 +2432,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_MAKE+set}" = set; then :
+if ${ac_cv_prog_MAKE+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$MAKE"; then
@@ -2469,7 +2478,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_MAKE+set}" = set; then :
+if ${ac_cv_prog_MAKE+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$MAKE"; then
@@ -2523,7 +2532,7 @@ if test -n "$ac_tool_prefix"; then
 set dummy ${ac_tool_prefix}gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_CC+set}" = set; then :
+if ${ac_cv_prog_CC+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$CC"; then
@@ -2563,7 +2572,7 @@ if test -z "$ac_cv_prog_CC"; then
 set dummy gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_ac_ct_CC+set}" = set; then :
+if ${ac_cv_prog_ac_ct_CC+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$ac_ct_CC"; then
@@ -2616,7 +2625,7 @@ if test -z "$CC"; then
 set dummy ${ac_tool_prefix}cc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_CC+set}" = set; then :
+if ${ac_cv_prog_CC+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$CC"; then
@@ -2656,7 +2665,7 @@ if test -z "$CC"; then
 set dummy cc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_CC+set}" = set; then :
+if ${ac_cv_prog_CC+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$CC"; then
@@ -2715,7 +2724,7 @@ if test -z "$CC"; then
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_CC+set}" = set; then :
+if ${ac_cv_prog_CC+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$CC"; then
@@ -2759,7 +2768,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_ac_ct_CC+set}" = set; then :
+if ${ac_cv_prog_ac_ct_CC+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$ac_ct_CC"; then
@@ -3042,7 +3051,7 @@ rm -f conftest.$ac_ext conftest$ac_cv_exeext conftest.out
 ac_clean_files=$ac_clean_files_save
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for suffix of object files" >&5
 $as_echo_n "checking for suffix of object files... " >&6; }
-if test "${ac_cv_objext+set}" = set; then :
+if ${ac_cv_objext+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -3093,7 +3102,7 @@ OBJEXT=$ac_cv_objext
 ac_objext=$OBJEXT
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C compiler" >&5
 $as_echo_n "checking whether we are using the GNU C compiler... " >&6; }
-if test "${ac_cv_c_compiler_gnu+set}" = set; then :
+if ${ac_cv_c_compiler_gnu+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -3130,7 +3139,7 @@ ac_test_CFLAGS=${CFLAGS+set}
 ac_save_CFLAGS=$CFLAGS
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC accepts -g" >&5
 $as_echo_n "checking whether $CC accepts -g... " >&6; }
-if test "${ac_cv_prog_cc_g+set}" = set; then :
+if ${ac_cv_prog_cc_g+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_save_c_werror_flag=$ac_c_werror_flag
@@ -3208,7 +3217,7 @@ else
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $CC option to accept ISO C89" >&5
 $as_echo_n "checking for $CC option to accept ISO C89... " >&6; }
-if test "${ac_cv_prog_cc_c89+set}" = set; then :
+if ${ac_cv_prog_cc_c89+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_cv_prog_cc_c89=no
@@ -3329,7 +3338,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for a BSD-compatible install" >&5
 $as_echo_n "checking for a BSD-compatible install... " >&6; }
 if test -z "$INSTALL"; then
-if test "${ac_cv_path_install+set}" = set; then :
+if ${ac_cv_path_install+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -3410,7 +3419,7 @@ test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
 set dummy touch; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_TOUCH+set}" = set; then :
+if ${ac_cv_prog_TOUCH+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$TOUCH"; then
@@ -3450,7 +3459,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_MKTEMP+set}" = set; then :
+if ${ac_cv_prog_MKTEMP+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$MKTEMP"; then
@@ -3493,7 +3502,7 @@ case $build in
 set dummy gawk; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_AWK+set}" = set; then :
+if ${ac_cv_prog_AWK+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$AWK"; then
@@ -3532,7 +3541,7 @@ fi
 set dummy gtar; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_TAR+set}" = set; then :
+if ${ac_cv_prog_TAR+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$TAR"; then
@@ -3575,7 +3584,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_AWK+set}" = set; then :
+if ${ac_cv_prog_AWK+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$AWK"; then
@@ -3618,7 +3627,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_TAR+set}" = set; then :
+if ${ac_cv_prog_TAR+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$TAR"; then
@@ -3664,7 +3673,7 @@ if test -n "$ac_tool_prefix"; then
 set dummy ${ac_tool_prefix}ranlib; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_RANLIB+set}" = set; then :
+if ${ac_cv_prog_RANLIB+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$RANLIB"; then
@@ -3704,7 +3713,7 @@ if test -z "$ac_cv_prog_RANLIB"; then
 set dummy ranlib; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_ac_ct_RANLIB+set}" = set; then :
+if ${ac_cv_prog_ac_ct_RANLIB+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$ac_ct_RANLIB"; then
@@ -3755,7 +3764,7 @@ fi
 set dummy ar; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_AR+set}" = set; then :
+if ${ac_cv_prog_AR+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$AR"; then
@@ -3794,7 +3803,7 @@ fi
 set dummy latex; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_LATEX+set}" = set; then :
+if ${ac_cv_path_LATEX+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   case $LATEX in
@@ -3836,7 +3845,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_MAKEINDEX+set}" = set; then :
+if ${ac_cv_prog_MAKEINDEX+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$MAKEINDEX"; then
@@ -3886,7 +3895,7 @@ case $build in
 set dummy bash; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_AUTO_GOOD_SHELL+set}" = set; then :
+if ${ac_cv_path_AUTO_GOOD_SHELL+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   case $AUTO_GOOD_SHELL in
@@ -3990,7 +3999,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_NOTANGLE+set}" = set; then :
+if ${ac_cv_prog_NOTANGLE+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$NOTANGLE"; then
@@ -4032,7 +4041,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_NOWEAVE+set}" = set; then :
+if ${ac_cv_prog_NOWEAVE+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$NOWEAVE"; then
@@ -4112,7 +4121,7 @@ if test -z $fricas_lisp ; then
 set dummy sbcl; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_FRICAS_LISP+set}" = set; then :
+if ${ac_cv_path_FRICAS_LISP+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   case $FRICAS_LISP in
@@ -4324,7 +4333,7 @@ if test -n "$CPP" && test -d "$CPP"; then
   CPP=
 fi
 if test -z "$CPP"; then
-  if test "${ac_cv_prog_CPP+set}" = set; then :
+  if ${ac_cv_prog_CPP+:} false; then :
   $as_echo_n "(cached) " >&6
 else
       # Double quotes because CPP needs to be expanded
@@ -4452,7 +4461,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for grep that handles long lines and -e" >&5
 $as_echo_n "checking for grep that handles long lines and -e... " >&6; }
-if test "${ac_cv_path_GREP+set}" = set; then :
+if ${ac_cv_path_GREP+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -z "$GREP"; then
@@ -4515,7 +4524,7 @@ $as_echo "$ac_cv_path_GREP" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for egrep" >&5
 $as_echo_n "checking for egrep... " >&6; }
-if test "${ac_cv_path_EGREP+set}" = set; then :
+if ${ac_cv_path_EGREP+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if echo a | $GREP -E '(a|b)' >/dev/null 2>&1
@@ -4582,7 +4591,7 @@ $as_echo "$ac_cv_path_EGREP" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ANSI C header files" >&5
 $as_echo_n "checking for ANSI C header files... " >&6; }
-if test "${ac_cv_header_stdc+set}" = set; then :
+if ${ac_cv_header_stdc+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -4717,7 +4726,7 @@ if test -n "$GMP_WRAP_SO_TARGET"; then :
   LDFLAGS="$LDFLAGS -fPIC $SOLIB_FLAGS"
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __gmpz_init in -lgmp" >&5
 $as_echo_n "checking for __gmpz_init in -lgmp... " >&6; }
-if test "${ac_cv_lib_gmp___gmpz_init+set}" = set; then :
+if ${ac_cv_lib_gmp___gmpz_init+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -4751,7 +4760,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_gmp___gmpz_init" >&5
 $as_echo "$ac_cv_lib_gmp___gmpz_init" >&6; }
-if test "x$ac_cv_lib_gmp___gmpz_init" = x""yes; then :
+if test "x$ac_cv_lib_gmp___gmpz_init" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_LIBGMP 1
 _ACEOF
@@ -4765,7 +4774,7 @@ fi
   for ac_header in gmp.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "gmp.h" "ac_cv_header_gmp_h" "$ac_includes_default"
-if test "x$ac_cv_header_gmp_h" = x""yes; then :
+if test "x$ac_cv_header_gmp_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_GMP_H 1
 _ACEOF
@@ -4984,7 +4993,7 @@ fricas_c_runtime=
 for ac_header in signal.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "signal.h" "ac_cv_header_signal_h" "$ac_includes_default"
-if test "x$ac_cv_header_signal_h" = x""yes; then :
+if test "x$ac_cv_header_signal_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_SIGNAL_H 1
 _ACEOF
@@ -4997,7 +5006,7 @@ done
 
 ac_fn_c_check_decl "$LINENO" "sigaction" "ac_cv_have_decl_sigaction" "#include <signal.h>
 "
-if test "x$ac_cv_have_decl_sigaction" = x""yes; then :
+if test "x$ac_cv_have_decl_sigaction" = xyes; then :
   ac_have_decl=1
 else
   ac_have_decl=0
@@ -5010,7 +5019,7 @@ _ACEOF
 for ac_header in sys/stat.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "sys/stat.h" "ac_cv_header_sys_stat_h" "$ac_includes_default"
-if test "x$ac_cv_header_sys_stat_h" = x""yes; then :
+if test "x$ac_cv_header_sys_stat_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_SYS_STAT_H 1
 _ACEOF
@@ -5024,7 +5033,7 @@ done
 for ac_header in unistd.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "unistd.h" "ac_cv_header_unistd_h" "$ac_includes_default"
-if test "x$ac_cv_header_unistd_h" = x""yes; then :
+if test "x$ac_cv_header_unistd_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_UNISTD_H 1
 _ACEOF
@@ -5037,7 +5046,7 @@ done
 
 ac_fn_c_check_decl "$LINENO" "getuid" "ac_cv_have_decl_getuid" "#include <unistd.h>
 "
-if test "x$ac_cv_have_decl_getuid" = x""yes; then :
+if test "x$ac_cv_have_decl_getuid" = xyes; then :
   ac_have_decl=1
 else
   ac_have_decl=0
@@ -5048,7 +5057,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 ac_fn_c_check_decl "$LINENO" "geteuid" "ac_cv_have_decl_geteuid" "#include <unistd.h>
 "
-if test "x$ac_cv_have_decl_geteuid" = x""yes; then :
+if test "x$ac_cv_have_decl_geteuid" = xyes; then :
   ac_have_decl=1
 else
   ac_have_decl=0
@@ -5059,7 +5068,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 ac_fn_c_check_decl "$LINENO" "getgid" "ac_cv_have_decl_getgid" "#include <unistd.h>
 "
-if test "x$ac_cv_have_decl_getgid" = x""yes; then :
+if test "x$ac_cv_have_decl_getgid" = xyes; then :
   ac_have_decl=1
 else
   ac_have_decl=0
@@ -5070,7 +5079,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 ac_fn_c_check_decl "$LINENO" "getegid" "ac_cv_have_decl_getegid" "#include <unistd.h>
 "
-if test "x$ac_cv_have_decl_getegid" = x""yes; then :
+if test "x$ac_cv_have_decl_getegid" = xyes; then :
   ac_have_decl=1
 else
   ac_have_decl=0
@@ -5083,7 +5092,7 @@ _ACEOF
 
 ac_fn_c_check_decl "$LINENO" "kill" "ac_cv_have_decl_kill" "#include <signal.h>
 "
-if test "x$ac_cv_have_decl_kill" = x""yes; then :
+if test "x$ac_cv_have_decl_kill" = xyes; then :
   ac_have_decl=1
 else
   ac_have_decl=0
@@ -5098,7 +5107,7 @@ case $host in
         for ac_header in winsock2.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "winsock2.h" "ac_cv_header_winsock2_h" "$ac_includes_default"
-if test "x$ac_cv_header_winsock2_h" = x""yes; then :
+if test "x$ac_cv_header_winsock2_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_WINSOCK2_H 1
 _ACEOF
@@ -5113,7 +5122,7 @@ done
         for ac_header in sys/socket.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "sys/socket.h" "ac_cv_header_sys_socket_h" "$ac_includes_default"
-if test "x$ac_cv_header_sys_socket_h" = x""yes; then :
+if test "x$ac_cv_header_sys_socket_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_SYS_SOCKET_H 1
 _ACEOF
@@ -5180,7 +5189,7 @@ case $host in
     *solaris*)
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing accept" >&5
 $as_echo_n "checking for library containing accept... " >&6; }
-if test "${ac_cv_search_accept+set}" = set; then :
+if ${ac_cv_search_accept+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_func_search_save_LIBS=$LIBS
@@ -5214,11 +5223,11 @@ for ac_lib in '' socket; do
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext
-  if test "${ac_cv_search_accept+set}" = set; then :
+  if ${ac_cv_search_accept+:} false; then :
   break
 fi
 done
-if test "${ac_cv_search_accept+set}" = set; then :
+if ${ac_cv_search_accept+:} false; then :
 
 else
   ac_cv_search_accept=no
@@ -5289,7 +5298,7 @@ rm -f conftest*
 for ac_header in util.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "util.h" "ac_cv_header_util_h" "$ac_includes_default"
-if test "x$ac_cv_header_util_h" = x""yes; then :
+if test "x$ac_cv_header_util_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_UTIL_H 1
 _ACEOF
@@ -5298,7 +5307,7 @@ else
   for ac_header in pty.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "pty.h" "ac_cv_header_pty_h" "$ac_includes_default"
-if test "x$ac_cv_header_pty_h" = x""yes; then :
+if test "x$ac_cv_header_pty_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_PTY_H 1
 _ACEOF
@@ -5321,7 +5330,7 @@ ac_fn_c_check_decl "$LINENO" "openpty" "ac_cv_have_decl_openpty" "
 #endif
 
 "
-if test "x$ac_cv_have_decl_openpty" = x""yes; then :
+if test "x$ac_cv_have_decl_openpty" = xyes; then :
 
 $as_echo "#define HAVE_OPENPTY_DECL 1" >>confdefs.h
 
@@ -5330,7 +5339,7 @@ fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for openpty in -lc" >&5
 $as_echo_n "checking for openpty in -lc... " >&6; }
-if test "${ac_cv_lib_c_openpty+set}" = set; then :
+if ${ac_cv_lib_c_openpty+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -5364,7 +5373,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_c_openpty" >&5
 $as_echo "$ac_cv_lib_c_openpty" >&6; }
-if test "x$ac_cv_lib_c_openpty" = x""yes; then :
+if test "x$ac_cv_lib_c_openpty" = xyes; then :
 
 $as_echo "#define HAVE_OPENPTY 1" >>confdefs.h
 
@@ -5372,7 +5381,7 @@ $as_echo "#define HAVE_OPENPTY 1" >>confdefs.h
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for openpty in -lutil" >&5
 $as_echo_n "checking for openpty in -lutil... " >&6; }
-if test "${ac_cv_lib_util_openpty+set}" = set; then :
+if ${ac_cv_lib_util_openpty+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -5406,7 +5415,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_util_openpty" >&5
 $as_echo "$ac_cv_lib_util_openpty" >&6; }
-if test "x$ac_cv_lib_util_openpty" = x""yes; then :
+if test "x$ac_cv_lib_util_openpty" = xyes; then :
 
 $as_echo "#define HAVE_OPENPTY 1" >>confdefs.h
 
@@ -5415,7 +5424,7 @@ $as_echo "#define HAVE_OPENPTY 1" >>confdefs.h
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for openpty in -lbsd" >&5
 $as_echo_n "checking for openpty in -lbsd... " >&6; }
-if test "${ac_cv_lib_bsd_openpty+set}" = set; then :
+if ${ac_cv_lib_bsd_openpty+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -5449,7 +5458,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bsd_openpty" >&5
 $as_echo "$ac_cv_lib_bsd_openpty" >&6; }
-if test "x$ac_cv_lib_bsd_openpty" = x""yes; then :
+if test "x$ac_cv_lib_bsd_openpty" = xyes; then :
 
 $as_echo "#define HAVE_OPENPTY 1" >>confdefs.h
 
@@ -5468,7 +5477,7 @@ fi
 for ac_header in sys/wait.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "sys/wait.h" "ac_cv_header_sys_wait_h" "$ac_includes_default"
-if test "x$ac_cv_header_sys_wait_h" = x""yes; then :
+if test "x$ac_cv_header_sys_wait_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_SYS_WAIT_H 1
 _ACEOF
@@ -5481,7 +5490,7 @@ done
 if test x"$ac_cv_header_sys_wait_h" = xyes; then \
     ac_fn_c_check_decl "$LINENO" "wait" "ac_cv_have_decl_wait" "#include <sys/wait.h>
 "
-if test "x$ac_cv_have_decl_wait" = x""yes; then :
+if test "x$ac_cv_have_decl_wait" = xyes; then :
   ac_have_decl=1
 else
   ac_have_decl=0
@@ -5495,7 +5504,7 @@ fi
 
 ac_fn_c_check_decl "$LINENO" "fork" "ac_cv_have_decl_fork" "#include <unistd.h>
 "
-if test "x$ac_cv_have_decl_fork" = x""yes; then :
+if test "x$ac_cv_have_decl_fork" = xyes; then :
   ac_have_decl=1
 else
   ac_have_decl=0
@@ -5814,7 +5823,7 @@ if ac_fn_c_try_link "$LINENO"; then :
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for dnet_ntoa in -ldnet" >&5
 $as_echo_n "checking for dnet_ntoa in -ldnet... " >&6; }
-if test "${ac_cv_lib_dnet_dnet_ntoa+set}" = set; then :
+if ${ac_cv_lib_dnet_dnet_ntoa+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -5848,14 +5857,14 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_dnet_dnet_ntoa" >&5
 $as_echo "$ac_cv_lib_dnet_dnet_ntoa" >&6; }
-if test "x$ac_cv_lib_dnet_dnet_ntoa" = x""yes; then :
+if test "x$ac_cv_lib_dnet_dnet_ntoa" = xyes; then :
   X_EXTRA_LIBS="$X_EXTRA_LIBS -ldnet"
 fi
 
     if test $ac_cv_lib_dnet_dnet_ntoa = no; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for dnet_ntoa in -ldnet_stub" >&5
 $as_echo_n "checking for dnet_ntoa in -ldnet_stub... " >&6; }
-if test "${ac_cv_lib_dnet_stub_dnet_ntoa+set}" = set; then :
+if ${ac_cv_lib_dnet_stub_dnet_ntoa+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -5889,7 +5898,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_dnet_stub_dnet_ntoa" >&5
 $as_echo "$ac_cv_lib_dnet_stub_dnet_ntoa" >&6; }
-if test "x$ac_cv_lib_dnet_stub_dnet_ntoa" = x""yes; then :
+if test "x$ac_cv_lib_dnet_stub_dnet_ntoa" = xyes; then :
   X_EXTRA_LIBS="$X_EXTRA_LIBS -ldnet_stub"
 fi
 
@@ -5908,14 +5917,14 @@ rm -f core conftest.err conftest.$ac_objext \
     # The functions gethostbyname, getservbyname, and inet_addr are
     # in -lbsd on LynxOS 3.0.1/i386, according to Lars Hecking.
     ac_fn_c_check_func "$LINENO" "gethostbyname" "ac_cv_func_gethostbyname"
-if test "x$ac_cv_func_gethostbyname" = x""yes; then :
+if test "x$ac_cv_func_gethostbyname" = xyes; then :
 
 fi
 
     if test $ac_cv_func_gethostbyname = no; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gethostbyname in -lnsl" >&5
 $as_echo_n "checking for gethostbyname in -lnsl... " >&6; }
-if test "${ac_cv_lib_nsl_gethostbyname+set}" = set; then :
+if ${ac_cv_lib_nsl_gethostbyname+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -5949,14 +5958,14 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_nsl_gethostbyname" >&5
 $as_echo "$ac_cv_lib_nsl_gethostbyname" >&6; }
-if test "x$ac_cv_lib_nsl_gethostbyname" = x""yes; then :
+if test "x$ac_cv_lib_nsl_gethostbyname" = xyes; then :
   X_EXTRA_LIBS="$X_EXTRA_LIBS -lnsl"
 fi
 
       if test $ac_cv_lib_nsl_gethostbyname = no; then
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for gethostbyname in -lbsd" >&5
 $as_echo_n "checking for gethostbyname in -lbsd... " >&6; }
-if test "${ac_cv_lib_bsd_gethostbyname+set}" = set; then :
+if ${ac_cv_lib_bsd_gethostbyname+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -5990,7 +5999,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bsd_gethostbyname" >&5
 $as_echo "$ac_cv_lib_bsd_gethostbyname" >&6; }
-if test "x$ac_cv_lib_bsd_gethostbyname" = x""yes; then :
+if test "x$ac_cv_lib_bsd_gethostbyname" = xyes; then :
   X_EXTRA_LIBS="$X_EXTRA_LIBS -lbsd"
 fi
 
@@ -6005,14 +6014,14 @@ fi
     # must be given before -lnsl if both are needed.  We assume that
     # if connect needs -lnsl, so does gethostbyname.
     ac_fn_c_check_func "$LINENO" "connect" "ac_cv_func_connect"
-if test "x$ac_cv_func_connect" = x""yes; then :
+if test "x$ac_cv_func_connect" = xyes; then :
 
 fi
 
     if test $ac_cv_func_connect = no; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for connect in -lsocket" >&5
 $as_echo_n "checking for connect in -lsocket... " >&6; }
-if test "${ac_cv_lib_socket_connect+set}" = set; then :
+if ${ac_cv_lib_socket_connect+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -6046,7 +6055,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_socket_connect" >&5
 $as_echo "$ac_cv_lib_socket_connect" >&6; }
-if test "x$ac_cv_lib_socket_connect" = x""yes; then :
+if test "x$ac_cv_lib_socket_connect" = xyes; then :
   X_EXTRA_LIBS="-lsocket $X_EXTRA_LIBS"
 fi
 
@@ -6054,14 +6063,14 @@ fi
 
     # Guillermo Gomez says -lposix is necessary on A/UX.
     ac_fn_c_check_func "$LINENO" "remove" "ac_cv_func_remove"
-if test "x$ac_cv_func_remove" = x""yes; then :
+if test "x$ac_cv_func_remove" = xyes; then :
 
 fi
 
     if test $ac_cv_func_remove = no; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for remove in -lposix" >&5
 $as_echo_n "checking for remove in -lposix... " >&6; }
-if test "${ac_cv_lib_posix_remove+set}" = set; then :
+if ${ac_cv_lib_posix_remove+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -6095,7 +6104,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_posix_remove" >&5
 $as_echo "$ac_cv_lib_posix_remove" >&6; }
-if test "x$ac_cv_lib_posix_remove" = x""yes; then :
+if test "x$ac_cv_lib_posix_remove" = xyes; then :
   X_EXTRA_LIBS="$X_EXTRA_LIBS -lposix"
 fi
 
@@ -6103,14 +6112,14 @@ fi
 
     # BSDI BSD/OS 2.1 needs -lipc for XOpenDisplay.
     ac_fn_c_check_func "$LINENO" "shmat" "ac_cv_func_shmat"
-if test "x$ac_cv_func_shmat" = x""yes; then :
+if test "x$ac_cv_func_shmat" = xyes; then :
 
 fi
 
     if test $ac_cv_func_shmat = no; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for shmat in -lipc" >&5
 $as_echo_n "checking for shmat in -lipc... " >&6; }
-if test "${ac_cv_lib_ipc_shmat+set}" = set; then :
+if ${ac_cv_lib_ipc_shmat+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -6144,7 +6153,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_ipc_shmat" >&5
 $as_echo "$ac_cv_lib_ipc_shmat" >&6; }
-if test "x$ac_cv_lib_ipc_shmat" = x""yes; then :
+if test "x$ac_cv_lib_ipc_shmat" = xyes; then :
   X_EXTRA_LIBS="$X_EXTRA_LIBS -lipc"
 fi
 
@@ -6162,7 +6171,7 @@ fi
   # John Interrante, Karl Berry
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for IceConnectionNumber in -lICE" >&5
 $as_echo_n "checking for IceConnectionNumber in -lICE... " >&6; }
-if test "${ac_cv_lib_ICE_IceConnectionNumber+set}" = set; then :
+if ${ac_cv_lib_ICE_IceConnectionNumber+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -6196,7 +6205,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_ICE_IceConnectionNumber" >&5
 $as_echo "$ac_cv_lib_ICE_IceConnectionNumber" >&6; }
-if test "x$ac_cv_lib_ICE_IceConnectionNumber" = x""yes; then :
+if test "x$ac_cv_lib_ICE_IceConnectionNumber" = xyes; then :
   X_PRE_LIBS="$X_PRE_LIBS -lSM -lICE"
 fi
 
@@ -6223,7 +6232,7 @@ fi
 if test -z $no_x; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for XpmReadFileToImage in -lXpm" >&5
 $as_echo_n "checking for XpmReadFileToImage in -lXpm... " >&6; }
-if test "${ac_cv_lib_Xpm_XpmReadFileToImage+set}" = set; then :
+if ${ac_cv_lib_Xpm_XpmReadFileToImage+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -6257,7 +6266,7 @@ LIBS=$ac_check_lib_save_LIBS
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_Xpm_XpmReadFileToImage" >&5
 $as_echo "$ac_cv_lib_Xpm_XpmReadFileToImage" >&6; }
-if test "x$ac_cv_lib_Xpm_XpmReadFileToImage" = x""yes; then :
+if test "x$ac_cv_lib_Xpm_XpmReadFileToImage" = xyes; then :
   fricas_has_xpm=yes
 else
   fricas_has_xpm=no
@@ -6294,7 +6303,7 @@ fi
 
 if test x"$fricas_has_xpm" = xyes; then
    ac_fn_c_check_header_mongrel "$LINENO" "regex.h" "ac_cv_header_regex_h" "$ac_includes_default"
-if test "x$ac_cv_header_regex_h" = x""yes; then :
+if test "x$ac_cv_header_regex_h" = xyes; then :
   fricas_src_all="$fricas_src_all all-hyper all-paste"
                     fricas_src_subdirs="$fricas_src_subdirs hyper paste"
                     ac_config_files="$ac_config_files src/paste/Makefile:config/var-def.mk:src/paste/Makefile.in:config/setup-dep.mk"
@@ -6417,58 +6426,32 @@ fi
 
 
 
+
+# Check whether --with-aldor was given.
+if test "${with_aldor+set}" = set; then :
+  withval=$with_aldor; if test -r "$withval/bin/aldor"; then :
+  ALDORROOT=$withval
+else
+  as_fn_error $? "specified aldor root does not contain the expected files $withval/bin/aldor" "$LINENO" 5
+fi
+fi
+
+
 ###################################################################
 ## If one of the Aldor related tests fail we should warn and
 ## not build the Aldor interface.
 
 if test x"$BUILD_ALDOR_INTERFACE" = xyes ; then
   ## check whether Aldor is available
-  for ac_prog in aldor
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_ALDOR+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$ALDOR"; then
-  ac_cv_prog_ALDOR="$ALDOR" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_prog_ALDOR="$ac_prog"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
+  ## check whether Aldor is available
+  ## Ideally, we'd avoid substituting ALDORROOT - the aldor executable
+  if test -x "$ALDORROOT/bin/aldor"; then
+    ALDOR="$ALDORROOT/bin/aldor -B $ALDORROOT"
 
-fi
-fi
-ALDOR=$ac_cv_prog_ALDOR
-if test -n "$ALDOR"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ALDOR" >&5
-$as_echo "$ALDOR" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-  test -n "$ALDOR" && break
-done
-
-  if test -z $ALDOR; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Aldor not found." >&5
-$as_echo "$as_me: WARNING: Aldor not found." >&2;}
-    as_fn_error $? "prerequisites for Aldor interface missing" "$LINENO" 5
+  else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Aldor not found. ($ALDORROOT)" >&5
+$as_echo "$as_me: WARNING: Aldor not found. ($ALDORROOT)" >&2;}
+    as_fn_error $? "prerequisites for Aldor interface missing." "$LINENO" 5
     BUILD_ALDOR_INTERFACE=no
   fi
 
@@ -6482,7 +6465,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_SVN+set}" = set; then :
+if ${ac_cv_prog_SVN+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$SVN"; then
@@ -6524,7 +6507,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_CURL+set}" = set; then :
+if ${ac_cv_prog_CURL+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$CURL"; then
@@ -6566,7 +6549,7 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_WGET+set}" = set; then :
+if ${ac_cv_prog_WGET+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$WGET"; then
@@ -6604,18 +6587,18 @@ done
 
 
   ## check for $ALDORROOT/include/aldor.conf
-  if test -z "$ALDORROOT" || ! test -f "$ALDORROOT/include/aldor.conf"; then
+if test -z $ALDORROOT || ! test -f $ALDORROOT/include/aldor.conf -o -f $ALDORROOT/share/include/aldor.conf; then
     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: The environment variable ALDORROOT is not set." >&5
 $as_echo "$as_me: WARNING: The environment variable ALDORROOT is not set." >&2;}
-    as_fn_error $? "prerequisites for Aldor interface missing" "$LINENO" 5
+    as_fn_error $? "prerequisites for Aldor interface missing.." "$LINENO" 5
     BUILD_ALDOR_INTERFACE=no
   fi
 
   ## check for $ALDORROOT/lib/libfoam.al (needed for aldor interface)
-  if ! test -f "$ALDORROOT/lib/libfoam.al"; then
+  if ! test -f "$ALDORROOT/lib/libfoam.al" -o -f "$ALDORROOT/share/lib/libfoam.al" ; then
     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Couldn't find libfoam.al." >&5
 $as_echo "$as_me: WARNING: Couldn't find libfoam.al." >&2;}
-    as_fn_error $? "prerequisites for Aldor interface missing" "$LINENO" 5
+    as_fn_error $? "prerequisites for Aldor interface missing..." "$LINENO" 5
     BUILD_ALDOR_INTERFACE=no
   fi
 fi
@@ -6631,7 +6614,7 @@ fi
 if test x"$BUILD_ALDOR_INTERFACE" = xyes ; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: Aldor interface will be built." >&5
 $as_echo "$as_me: Aldor interface will be built." >&6;}
-  fricas_src_subdirs="$fricas_src_subdirs aldor"
+  fricas_src_subdirs="$fricas_src_subdirs aldorlib aldor"
   fricas_src_all="$fricas_src_all all-aldor"
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Aldor interface will not be built." >&5
@@ -6642,6 +6625,8 @@ ac_config_files="$ac_config_files src/aldor/Makefile:config/var-def.mk:src/aldor
 ac_config_files="$ac_config_files src/aldor/Makefile2:config/var-def.mk:src/aldor/Makefile2.in:config/setup-dep.mk"
 
 ac_config_files="$ac_config_files src/aldor/Makefile3:config/var-def.mk:src/aldor/Makefile3.in:config/setup-dep.mk"
+
+ac_config_files="$ac_config_files src/aldorlib/Makefile:config/var-def.mk:src/aldorlib/Makefile.in:config/setup-dep.mk"
 
 ###################################################################
 
@@ -6732,10 +6717,21 @@ $as_echo "$as_me: WARNING: cache variable $ac_var contains a newline" >&2;} ;;
      :end' >>confcache
 if diff "$cache_file" confcache >/dev/null 2>&1; then :; else
   if test -w "$cache_file"; then
-    test "x$cache_file" != "x/dev/null" &&
+    if test "x$cache_file" != "x/dev/null"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: updating cache $cache_file" >&5
 $as_echo "$as_me: updating cache $cache_file" >&6;}
-    cat confcache >$cache_file
+      if test ! -f "$cache_file" || test -h "$cache_file"; then
+	cat confcache >"$cache_file"
+      else
+        case $cache_file in #(
+        */* | ?:*)
+	  mv -f confcache "$cache_file"$$ &&
+	  mv -f "$cache_file"$$ "$cache_file" ;; #(
+        *)
+	  mv -f confcache "$cache_file" ;;
+	esac
+      fi
+    fi
   else
     { $as_echo "$as_me:${as_lineno-$LINENO}: not updating unwritable cache $cache_file" >&5
 $as_echo "$as_me: not updating unwritable cache $cache_file" >&6;}
@@ -6767,7 +6763,7 @@ LTLIBOBJS=$ac_ltlibobjs
 
 
 
-: ${CONFIG_STATUS=./config.status}
+: "${CONFIG_STATUS=./config.status}"
 ac_write_fail=0
 ac_clean_files_save=$ac_clean_files
 ac_clean_files="$ac_clean_files $CONFIG_STATUS"
@@ -6868,6 +6864,7 @@ fi
 IFS=" ""	$as_nl"
 
 # Find who we are.  Look in the path if we contain no directory separator.
+as_myself=
 case $0 in #((
   *[\\/]* ) as_myself=$0 ;;
   *) as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -7383,6 +7380,7 @@ do
     "src/aldor/Makefile") CONFIG_FILES="$CONFIG_FILES src/aldor/Makefile:config/var-def.mk:src/aldor/Makefile.in:config/setup-dep.mk" ;;
     "src/aldor/Makefile2") CONFIG_FILES="$CONFIG_FILES src/aldor/Makefile2:config/var-def.mk:src/aldor/Makefile2.in:config/setup-dep.mk" ;;
     "src/aldor/Makefile3") CONFIG_FILES="$CONFIG_FILES src/aldor/Makefile3:config/var-def.mk:src/aldor/Makefile3.in:config/setup-dep.mk" ;;
+    "src/aldorlib/Makefile") CONFIG_FILES="$CONFIG_FILES src/aldorlib/Makefile:config/var-def.mk:src/aldorlib/Makefile.in:config/setup-dep.mk" ;;
     "contrib/emacs/Makefile") CONFIG_FILES="$CONFIG_FILES contrib/emacs/Makefile:config/var-def.mk:contrib/emacs/Makefile.in:config/setup-dep.mk" ;;
     "build/scripts/document") CONFIG_FILES="$CONFIG_FILES build/scripts/document:$srcdir/src/scripts/document.in" ;;
 
@@ -7408,9 +7406,10 @@ fi
 # after its creation but before its name has been assigned to `$tmp'.
 $debug ||
 {
-  tmp=
+  tmp= ac_tmp=
   trap 'exit_status=$?
-  { test -z "$tmp" || test ! -d "$tmp" || rm -fr "$tmp"; } && exit $exit_status
+  : "${ac_tmp:=$tmp}"
+  { test ! -d "$ac_tmp" || rm -fr "$ac_tmp"; } && exit $exit_status
 ' 0
   trap 'as_fn_exit 1' 1 2 13 15
 }
@@ -7418,12 +7417,13 @@ $debug ||
 
 {
   tmp=`(umask 077 && mktemp -d "./confXXXXXX") 2>/dev/null` &&
-  test -n "$tmp" && test -d "$tmp"
+  test -d "$tmp"
 }  ||
 {
   tmp=./conf$$-$RANDOM
   (umask 077 && mkdir "$tmp")
 } || as_fn_error $? "cannot create a temporary directory in ." "$LINENO" 5
+ac_tmp=$tmp
 
 # Set up the scripts for CONFIG_FILES section.
 # No need to generate them if there are no CONFIG_FILES.
@@ -7445,7 +7445,7 @@ else
   ac_cs_awk_cr=$ac_cr
 fi
 
-echo 'BEGIN {' >"$tmp/subs1.awk" &&
+echo 'BEGIN {' >"$ac_tmp/subs1.awk" &&
 _ACEOF
 
 
@@ -7473,7 +7473,7 @@ done
 rm -f conf$$subs.sh
 
 cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
-cat >>"\$tmp/subs1.awk" <<\\_ACAWK &&
+cat >>"\$ac_tmp/subs1.awk" <<\\_ACAWK &&
 _ACEOF
 sed -n '
 h
@@ -7521,7 +7521,7 @@ t delim
 rm -f conf$$subs.awk
 cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
 _ACAWK
-cat >>"\$tmp/subs1.awk" <<_ACAWK &&
+cat >>"\$ac_tmp/subs1.awk" <<_ACAWK &&
   for (key in S) S_is_set[key] = 1
   FS = ""
 
@@ -7553,7 +7553,7 @@ if sed "s/$ac_cr//" < /dev/null > /dev/null 2>&1; then
   sed "s/$ac_cr\$//; s/$ac_cr/$ac_cs_awk_cr/g"
 else
   cat
-fi < "$tmp/subs1.awk" > "$tmp/subs.awk" \
+fi < "$ac_tmp/subs1.awk" > "$ac_tmp/subs.awk" \
   || as_fn_error $? "could not setup config files machinery" "$LINENO" 5
 _ACEOF
 
@@ -7587,7 +7587,7 @@ fi # test -n "$CONFIG_FILES"
 # No need to generate them if there are no CONFIG_HEADERS.
 # This happens for instance with `./config.status Makefile'.
 if test -n "$CONFIG_HEADERS"; then
-cat >"$tmp/defines.awk" <<\_ACAWK ||
+cat >"$ac_tmp/defines.awk" <<\_ACAWK ||
 BEGIN {
 _ACEOF
 
@@ -7599,8 +7599,8 @@ _ACEOF
 # handling of long lines.
 ac_delim='%!_!# '
 for ac_last_try in false false :; do
-  ac_t=`sed -n "/$ac_delim/p" confdefs.h`
-  if test -z "$ac_t"; then
+  ac_tt=`sed -n "/$ac_delim/p" confdefs.h`
+  if test -z "$ac_tt"; then
     break
   elif $ac_last_try; then
     as_fn_error $? "could not make $CONFIG_HEADERS" "$LINENO" 5
@@ -7720,7 +7720,7 @@ do
     for ac_f
     do
       case $ac_f in
-      -) ac_f="$tmp/stdin";;
+      -) ac_f="$ac_tmp/stdin";;
       *) # Look for the file first in the build tree, then in the source tree
 	 # (if the path is not absolute).  The absolute path cannot be DOS-style,
 	 # because $ac_f cannot contain `:'.
@@ -7886,21 +7886,22 @@ s&@abs_top_builddir@&$ac_abs_top_builddir&;t t
 s&@INSTALL@&$ac_INSTALL&;t t
 $ac_datarootdir_hack
 "
-eval sed \"\$ac_sed_extra\" "$ac_file_inputs" | $AWK -f "$tmp/subs.awk" >$tmp/out \
-  || as_fn_error $? "could not create $ac_file" "$LINENO" 5
+eval sed \"\$ac_sed_extra\" "$ac_file_inputs" | $AWK -f "$ac_tmp/subs.awk" \
+  >$ac_tmp/out || as_fn_error $? "could not create $ac_file" "$LINENO" 5
 
 test -z "$ac_datarootdir_hack$ac_datarootdir_seen" &&
-  { ac_out=`sed -n '/\${datarootdir}/p' "$tmp/out"`; test -n "$ac_out"; } &&
-  { ac_out=`sed -n '/^[	 ]*datarootdir[	 ]*:*=/p' "$tmp/out"`; test -z "$ac_out"; } &&
+  { ac_out=`sed -n '/\${datarootdir}/p' "$ac_tmp/out"`; test -n "$ac_out"; } &&
+  { ac_out=`sed -n '/^[	 ]*datarootdir[	 ]*:*=/p' \
+      "$ac_tmp/out"`; test -z "$ac_out"; } &&
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $ac_file contains a reference to the variable \`datarootdir'
 which seems to be undefined.  Please make sure it is defined" >&5
 $as_echo "$as_me: WARNING: $ac_file contains a reference to the variable \`datarootdir'
 which seems to be undefined.  Please make sure it is defined" >&2;}
 
-  rm -f "$tmp/stdin"
+  rm -f "$ac_tmp/stdin"
   case $ac_file in
-  -) cat "$tmp/out" && rm -f "$tmp/out";;
-  *) rm -f "$ac_file" && mv "$tmp/out" "$ac_file";;
+  -) cat "$ac_tmp/out" && rm -f "$ac_tmp/out";;
+  *) rm -f "$ac_file" && mv "$ac_tmp/out" "$ac_file";;
   esac \
   || as_fn_error $? "could not create $ac_file" "$LINENO" 5
  ;;
@@ -7911,20 +7912,20 @@ which seems to be undefined.  Please make sure it is defined" >&2;}
   if test x"$ac_file" != x-; then
     {
       $as_echo "/* $configure_input  */" \
-      && eval '$AWK -f "$tmp/defines.awk"' "$ac_file_inputs"
-    } >"$tmp/config.h" \
+      && eval '$AWK -f "$ac_tmp/defines.awk"' "$ac_file_inputs"
+    } >"$ac_tmp/config.h" \
       || as_fn_error $? "could not create $ac_file" "$LINENO" 5
-    if diff "$ac_file" "$tmp/config.h" >/dev/null 2>&1; then
+    if diff "$ac_file" "$ac_tmp/config.h" >/dev/null 2>&1; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: $ac_file is unchanged" >&5
 $as_echo "$as_me: $ac_file is unchanged" >&6;}
     else
       rm -f "$ac_file"
-      mv "$tmp/config.h" "$ac_file" \
+      mv "$ac_tmp/config.h" "$ac_file" \
 	|| as_fn_error $? "could not create $ac_file" "$LINENO" 5
     fi
   else
     $as_echo "/* $configure_input  */" \
-      && eval '$AWK -f "$tmp/defines.awk"' "$ac_file_inputs" \
+      && eval '$AWK -f "$ac_tmp/defines.awk"' "$ac_file_inputs" \
       || as_fn_error $? "could not create -" "$LINENO" 5
   fi
  ;;

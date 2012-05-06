@@ -117,6 +117,8 @@ ListLisp(T: Type): with {
    NIL: () -> %;
    NULL: % -> Boolean;
    
+   EQ: (T, T) -> Boolean;
+
    RPLACA: (%, T) -> ();
    RPLACD: (%, %) -> ();
 }
@@ -134,6 +136,8 @@ ListLisp(T: Type): with {
 
       RPLACA: (Rep, Rep) -> ();
       RPLACD: (Rep, Rep) -> ();
+
+      EQ: (Rep, Rep) -> Boolean;
    } from Foreign Lisp;
 
    CONS(t: T, b: %): % == per CONS(trep t, rep b);
@@ -144,6 +148,8 @@ ListLisp(T: Type): with {
 
    RPLACA(a: %, t: T): () == RPLACA(rep a, trep t);
    RPLACD(a: %, b: %): () == RPLACD(rep a, rep b);
+
+   EQ(a: T, b: T): Boolean == EQ(trep a, trep b);
 }
 
 ArrayLisp(T: Type): with {

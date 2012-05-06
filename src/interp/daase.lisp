@@ -1531,7 +1531,7 @@ database.
 ;  domain. the FIRST time this is done for the domain the autoloader
 ;  invokes the file object. every other time the domain already
 ;  exists.
-;(defvar *this-file* "no-file")
+(defvar *this-file* "no-file")
 
 (defmacro |CCall| (fun &rest args)
   (let ((ccc (gensym)) (cfun (gensym)) (cenv (gensym)))
@@ -1653,7 +1653,7 @@ database.
          (bootname (intern stringname 'boot)))
     (declare (ignore libname))
     (if (and (eq hcode 'foam-user::|initializer|) (not (boundp asharpname)))
-        (error (format nil "AxiomXL file ~s is missing!" stringname)))
+        (error (format nil "AxiomXL file ~s is missing!" stringname asharpname)))
     (unless (or (not (numberp hcode)) (zerop hcode) (boundp asharpname))
           (when (|constructor?| bootname)
                 (set asharpname
@@ -1661,15 +1661,15 @@ database.
                          (|makeLazyOldAxiomDispatchDomain| (list bootname))
                        (cons '|runOldAxiomFunctor|  bootname)))))))
 
-;(defun foam::process-export-entry (entry)
-;  (let* ((asharpname (car entry))
-;        (stringname (cadr entry))
-;        (hcode (caddr entry))
-;        (libname (cadddr entry))
-;        (bootname (intern stringname 'boot)))
-;    (declare (ignore libname))
-;    (when (numberp hcode)
-;         (setf (get bootname 'asharp-name)
-;               (cons (cons *this-file* asharpname)
-;                     (get bootname 'asharp-name)))
-;         )))
+(defun foam::process-export-entry (entry)
+  (let* ((asharpname (car entry))
+        (stringname (cadr entry))
+        (hcode (caddr entry))
+        (libname (cadddr entry))
+        (bootname (intern stringname 'boot)))
+    (declare (ignore libname))
+    (when (numberp hcode)
+         (setf (get bootname 'asharp-name)
+               (cons (cons *this-file* asharpname)
+                     (get bootname 'asharp-name)))
+         )))

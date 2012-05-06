@@ -4,11 +4,13 @@
 import from Boolean
 
 VECTORMININDEX ==> 1       -- if you want to change this, be my guest
+import from Integer;
 
 extend Vector(R:Type): VectorCategory R with
    vector: List R -> %
      ++ vector(l) converts the list l to a vector.
    bracket: Tuple R -> %;
+   bracket: Generator R -> %;
    apply: (%, Integer) -> R
  == IndexedVector(R, VECTORMININDEX) add
      default x: %;
@@ -31,4 +33,5 @@ extend Vector(R:Type): VectorCategory R with
 
      -- ? In VectorCategory?
      [a: Tuple R]: % == never;
+     [a: Generator R]: % == never;
      apply(x: %, i: Integer): R == never
